@@ -76,7 +76,7 @@ input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8
 <body>
 <aside id="side">
   <div class="brand">
-    <img src="/dr2.jpg" alt="د. محمد رمضان">
+    <img src="dr2.jpg" alt="د. محمد رمضان">
     <h2>د. محمد رمضان</h2>
     <span>المنصة التعليمية الرسمية</span>
   </div>
@@ -118,7 +118,7 @@ input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8
     <option value="year">باقة السنة (950 ج)</option>
   </select>
   <input class="f" id="cPrice" type="number" placeholder="السعر بالجنيه">
-  <input class="f" id="cImg" placeholder="رابط الصورة" value="/dr2.jpg">
+  <input class="f" id="cImg" placeholder="رابط الصورة" value="dr2.jpg">
   <textarea class="f" id="cDesc" rows="3" placeholder="وصف مختصر..."></textarea>
   <div class="err" id="admErr"></div>
   <button onclick="addCourse()" style="width:100%;background:var(--ok)">نشر الكورس الآن</button>
@@ -149,10 +149,10 @@ async function load(){
 
 function card(c){
   const on=mine.includes(c.id);
-  const img=c.image||'/dr2.jpg';
+  const img=c.image||'dr2.jpg';
   return `<div class="card">
     <div class="thumb-wrap">
-      <img src="${img}" onerror="this.src='/dr2.jpg'" alt="${c.title}">
+      <img src="${img}" onerror="this.src='dr2.jpg'" alt="${c.title}">
       <span class="plan-tag">${BADGE[c.plan]||c.plan}</span>
       <span class="price-tag">${c.price} جنيه</span>
     </div>
@@ -183,7 +183,7 @@ function render(){
         </div>
       </div>
       <div class="hero-main-img">
-        <img src="/dr2.jpg" alt="د. محمد رمضان">
+        <img src="dr2.jpg" alt="د. محمد رمضان">
         <div class="caption">د. محمد رمضان</div>
       </div>
     </div>
@@ -249,5 +249,6 @@ async function addCourse(){
 load();
 </script>
 </body>
+</html>
 </html>
 
