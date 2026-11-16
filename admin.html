@@ -41,6 +41,16 @@ th,td{padding:10px;text-align:right;border-bottom:1px solid var(--line)}th{color
 .wa{background:#16a34a;color:#fff!important;border-radius:6px;padding:1px 8px;font-size:.75rem;margin-inline-start:6px}
 .sm{display:flex;flex-direction:column;gap:6px;align-items:flex-start;font-size:.85rem;color:var(--muted)}
 .empty{text-align:center;color:var(--muted);padding:34px}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.sc{background:linear-gradient(160deg,#131d33,#0f172a);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;transition:.2s}
+.sc:hover{border-color:#2563eb88}.sc.wide{grid-column:1/-1;border-color:var(--gold)}
+.sh{display:flex;align-items:center;gap:12px}.sh small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+.av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#7c3aed);display:grid;place-items:center;font-weight:800;font-size:1.2rem;flex-shrink:0}
+.sr{display:flex;gap:8px;align-items:center;font-size:.88rem;background:var(--bg);border-radius:8px;padding:8px 10px;word-break:break-all}
+.sr.par{border:1px solid #f59e0b55}.sr.par span:first-child{color:var(--gold);white-space:nowrap}.sr a{color:#38bdf8;text-decoration:none}.sr .ed{cursor:pointer;margin-inline-start:auto}
+.ss{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted)}
+.stat{background:linear-gradient(135deg,#131d33,#0f172a)}
+header{background:linear-gradient(90deg,#111a2e,#0f1f3d)}
 @media(max-width:700px){.stats,.grid2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -149,8 +159,22 @@ function studentCards(){
       <button onclick="gOpen=${gOpen===s.id?'null':s.id};render()">📝 الدرجات والواجبات (${s.grades.length})</button></div>
   </div>${gOpen===s.id?`<div style="margin-top:12px;border-top:1px solid var(--line)">${gradesPanel(s)}</div>`:''}</div>`).join('');
 }
+function studentList(){
+  const l=students.filter(s=>!q||[s.name,s.email,s.phone,s.parentPhone].join(' ').includes(q));
+  if(!l.length)return '<p style="color:var(--muted)">لا يوجد طلاب.</p>';
+  return `<div class="sgrid">${l.map(s=>`<div class="sc ${gOpen===s.id?'wide':''}">
+    <div class="sh"><div class="av">${esc((s.name||'?').trim().charAt(0))}</div>
+      <div><b>${esc(s.name)}</b><small>سجّل في ${new Date(s.joined).toLocaleDateString('ar-EG')}</small></div></div>
+    <div class="sr"><span>📧</span><span>${esc(s.email)}</span></div>
+    <div class="sr"><span>📱</span><span dir="ltr">${esc(s.phone)||'—'}</span></div>
+    <div class="sr par"><span>👨‍👩‍👦 ولي الأمر</span><span dir="ltr">${s.parentPhone?`<a href="tel:${esc(s.parentPhone)}">${esc(s.parentPhone)}</a>`:'<i style="color:var(--red)">غير مسجّل</i>'}</span><a class="ed" onclick="editParent(${s.id})">✏️</a></div>
+    <div>${s.courses.map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'<span class="tag">غير مشترك في كورسات</span>'}</div>
+    <div class="ss"><span>🎬 شاهد ${s.watched} فيديو</span><span>📝 ${s.grades.length} درجة</span></div>
+    <button onclick="gOpen=${gOpen===s.id?'null':s.id};render()">${gOpen===s.id?'إغلاق':'الدرجات والامتحانات'}</button>
+    ${gOpen===s.id?gradesPanel(s):''}</div>`).join('')}</div>`;
+}
 function studentsHTML(){
-  return `<input placeholder="🔍 ابحث بالاسم أو الإيميل أو رقم الموبايل..." value="${esc(q)}" oninput="q=this.value;$('slist').innerHTML=studentCards()" style="margin-bottom:14px"><div id="slist">${studentCards()}</div>`;
+  return `<div class="box"><input placeholder="🔍 ابحث بالاسم أو الإيميل أو الموبايل..." value="${esc(q)}" oninput="q=this.value;$('sl').innerHTML=studentList()"><div id="sl" style="margin-top:12px">${studentList()}</div></div>`;
 }
 async function reloadS(){students=await api('/api/admin/students');render()}
 async function addGrade(id){
