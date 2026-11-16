@@ -43,7 +43,10 @@ main{margin-right:235px;flex:1;min-width:0}
 .card:hover{transform:translateY(-4px);border-color:var(--accent)}
 .thumb-wrap{position:relative;height:200px;background:#1e293b;overflow:hidden}
 .thumb-wrap img{width:100%;height:100%;object-fit:cover;object-position:top}
-.plan-tag{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.88);color:var(--gold);border:1px solid var(--gold);padding:3px 12px;border-radius:20px;font-size:.78rem;font-weight:700}
+.plan-tag{position:absolute;top:12px;right:12px;z-index:3;background:var(--gold);color:#111;padding:4px 16px;border-radius:20px;font-size:.9rem;font-weight:800;box-shadow:0 3px 10px rgba(0,0,0,.45)}
+.thumb-wrap.p-month{background:linear-gradient(135deg,#7c3aed,#4f46e5)}.thumb-wrap.p-term{background:linear-gradient(135deg,#0891b2,#2563eb)}.thumb-wrap.p-year{background:linear-gradient(135deg,#ea580c,#db2777)}
+.ph{position:absolute;inset:0;display:grid;place-items:center;font-size:2.2rem;font-weight:800;color:#fff;opacity:.9}
+.thumb-wrap img{position:relative;z-index:1}
 .price-tag{position:absolute;bottom:12px;left:12px;background:var(--ok);color:#fff;padding:4px 12px;border-radius:8px;font-weight:800;font-size:.95rem}
 .card-body{padding:16px;flex:1;display:flex;flex-direction:column}
 .card h4{font-size:1.05rem;margin-bottom:8px;color:#fff}
@@ -66,7 +69,7 @@ input.f{width:100%;padding:11px;margin:7px 0;border-radius:8px;border:1px solid 
 </head>
 <body>
 <aside id="side">
-  <div class="brand"><img src="/dr2.jpg" alt="د. محمد رمضان"><h2>د. محمد رمضان</h2><span>المنصة التعليمية الرسمية</span></div>
+  <div class="brand"><img src="/dr2.jpg" alt="د. محمد رمضان" onerror="this.style.visibility='hidden'"><h2>د. محمد رمضان</h2><span>المنصة التعليمية الرسمية</span></div>
   <a data-v="home" class="on">🏠 الرئيسية</a>
   <a data-v="all">📚 جميع الكورسات</a>
   <a data-v="mine">🎓 كورساتي المشترك بها</a>
@@ -100,7 +103,7 @@ input.f{width:100%;padding:11px;margin:7px 0;border-radius:8px;border:1px solid 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const PLANS={all:'الكل',month:'اشتراك شهري (150 ج)',term:'اشتراك الترم (450 ج)',year:'اشتراك السنة (950 ج)'};
-const BADGE={month:'باقة الشهر',term:'باقة الترم',year:'باقة السنة'};
+const BADGE={month:'الشهر',term:'الترم',year:'السنة'};
 let view='home',plan='all',mode='login',token=localStorage.token,courses=[],mine=[],curC=null,vids=[],curV=null;
 
 function imagePath(p){const v=String(p||'').trim();if(!v)return '/dr2.jpg';if(/^(https?:|data:|blob:)/i.test(v)||v.startsWith('/'))return v;return '/'+v.replace(/^\.?\//,'')}
@@ -129,8 +132,8 @@ async function load(){
 
 function card(c){
   const on=mine.includes(c.id);
-  return `<div class="card"><div class="thumb-wrap">
-    <img src="${esc(imagePath(c.image))}" onerror="this.onerror=null;this.src='/dr2.jpg'" alt="${esc(c.title)}">
+  return `<div class="card"><div class="thumb-wrap p-${esc(c.plan)}"><span class="ph">${BADGE[c.plan]||''}</span>
+    <img src="${esc(imagePath(c.image))}" onerror="if(this.dataset.f){this.style.display='none'}else{this.dataset.f=1;this.src='/dr2.jpg'}" alt="${esc(c.title)}">
     <span class="plan-tag">${BADGE[c.plan]||esc(c.plan)}</span><span class="price-tag">${+c.price} جنيه</span></div>
     <div class="card-body"><h4>${esc(c.title)}</h4><p>${esc(c.desc)}</p>
     ${on?`<button style="background:var(--ok)" onclick="openCourse(${c.id})">▶ الدخول للكورس</button>`
@@ -165,7 +168,7 @@ function render(){
     <p>معك خطوة بخطوة لفهم المادة بأبسط أسلوب وأقوى تطبيق عملي. اختر الباقة التي تناسبك وابدأ رحلة التفوق الآن.</p>
     <div class="hero-btns"><button onclick="view='all';render()">تصفح جميع الكورسات ⬅️</button>
     ${!token?`<button class="sec" onclick="openAuth('register')">إنشاء حساب طالب جديد</button>`:''}</div></div>
-    <div class="hero-main-img"><img src="/dr2.jpg" alt="د. محمد رمضان" onerror="this.onerror=null;this.src='/dr1.jpg'"><div class="caption">د. محمد رمضان</div></div></div>
+    <div class="hero-main-img"><img src="/dr2.jpg" alt="د. محمد رمضان" onerror="this.style.visibility='hidden'"><div class="caption">د. محمد رمضان</div></div></div>
     <div class="stats"><div class="stat"><b style="color:var(--accent)">150 ج</b><span>اشتراك الشهر</span></div>
     <div class="stat"><b style="color:var(--ok)">450 ج</b><span>اشتراك الترم الكامل</span></div>
     <div class="stat"><b style="color:var(--gold)">950 ج</b><span>باقة السنة الشاملة</span></div></div>
