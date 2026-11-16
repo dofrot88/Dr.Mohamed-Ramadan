@@ -32,6 +32,15 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.9rem}
 th,td{padding:10px;text-align:right;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
 .tag{display:inline-block;background:var(--line);border-radius:6px;padding:2px 8px;margin:2px;font-size:.78rem}
+.st{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.st .row{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.av{width:46px;height:46px;border-radius:50%;background:var(--btn);display:grid;place-items:center;font-weight:800;font-size:1.1rem;flex-shrink:0}
+.si{flex:1;min-width:230px}.si b{font-size:1.02rem}.si small{display:block;color:var(--muted);margin:2px 0 8px}
+.ph{display:flex;flex-direction:column;gap:5px;font-size:.88rem;margin-bottom:8px}
+.ph a{color:#38bdf8;text-decoration:none}.ph .no{color:#fca5a5}
+.wa{background:#16a34a;color:#fff!important;border-radius:6px;padding:1px 8px;font-size:.75rem;margin-inline-start:6px}
+.sm{display:flex;flex-direction:column;gap:6px;align-items:flex-start;font-size:.85rem;color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:34px}
 @media(max-width:700px){.stats,.grid2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -45,7 +54,7 @@ th,td{padding:10px;text-align:right;border-bottom:1px solid var(--line)}th{color
 </div>
 
 <div id="app" style="display:none">
-  <header><b>⚙️ لوحة تحكم د. محمد رمضان</b>
+  <header><b>👋 أهلاً د. محمد، لوحة التحكم</b>
     <div><button class="sec" onclick="location.href='/'">الموقع</button> <button class="sec" onclick="out()">خروج</button></div></header>
   <div class="wrap">
     <div class="stats" id="stats"></div>
@@ -87,9 +96,9 @@ async function start(){
 function tab(t){cur=t;render()}
 function render(){
   const enr=students.reduce((n,s)=>n+s.courses.length,0);
-  $('stats').innerHTML=`<div class="stat"><b>${students.length}</b><span>عدد الطلاب</span></div>
-   <div class="stat"><b>${courses.length}</b><span>عدد الكورسات</span></div>
-   <div class="stat"><b>${enr}</b><span>إجمالي الاشتراكات</span></div>`;
+  $('stats').innerHTML=`<div class="stat"><b>${students.length}</b><span>👥 عدد الطلاب</span></div>
+   <div class="stat"><b>${courses.length}</b><span>📚 عدد الكورسات</span></div>
+   <div class="stat"><b>${enr}</b><span>✅ إجمالي الاشتراكات</span></div>`;
   $('t-courses').classList.toggle('on',cur=='courses');$('t-students').classList.toggle('on',cur=='students');
   $('main').innerHTML=cur=='courses'?coursesHTML():studentsHTML();
 }
@@ -122,17 +131,26 @@ function gradesPanel(s){
    <div style="display:flex;gap:8px"><input id="gScore" type="number" placeholder="الدرجة"><input id="gMax" type="number" placeholder="من" value="100"></div></div>
   <div class="err" id="gErr"></div><button style="background:var(--ok)" onclick="addGrade(${s.id})">+ إضافة الدرجة</button></div>`;
 }
-function studentsHTML(){
+const wa=n=>{let d=String(n).replace(/\D/g,'');if(d.startsWith('0'))d='2'+d;return 'https://wa.me/'+d};
+function studentCards(){
   const l=students.filter(s=>!q||[s.name,s.email,s.phone,s.parentPhone].join(' ').includes(q));
-  return `<div class="box"><input placeholder="ابحث بالاسم أو الإيميل أو الموبايل..." value="${esc(q)}" oninput="q=this.value;render();this.focus()">
-  <div class="tw"><table><tr><th>#</th><th>الاسم</th><th>الإيميل</th><th>موبايل الطالب</th><th>ولي الأمر</th><th>التسجيل</th><th>الكورسات</th><th>فيديوهات شاهدها</th><th></th></tr>
-  ${l.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.email)}</td><td dir="ltr">${esc(s.phone)}</td>
-   <td dir="ltr">${esc(s.parentPhone)||'—'} <a style="cursor:pointer" onclick="editParent(${s.id})">✏️</a></td>
-   <td>${new Date(s.joined).toLocaleDateString('ar-EG')}</td>
-   <td>${s.courses.map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'—'}</td><td>${s.watched}</td>
-   <td><button onclick="gOpen=${gOpen===s.id?'null':s.id};render()">الدرجات (${s.grades.length})</button></td></tr>
-   ${gOpen===s.id?`<tr><td colspan="9">${gradesPanel(s)}</td></tr>`:''}`).join('')||'<tr><td colspan="9" style="color:var(--muted)">لا يوجد طلاب.</td></tr>'}
-  </table></div></div>`;
+  if(!l.length)return '<div class="empty">'+(students.length?'مفيش نتيجة للبحث 🔍':'لسه محدش سجّل في المنصة 👀')+'</div>';
+  return l.map(s=>`<div class="st"><div class="row">
+    <div class="av">${esc((s.name||'?').trim().charAt(0))}</div>
+    <div class="si"><b>${esc(s.name)}</b><small>${esc(s.email)}</small>
+      <div class="ph">
+        <span>📱 الطالب: <a dir="ltr" href="tel:${esc(s.phone)}">${esc(s.phone)||'—'}</a>${s.phone?`<a class="wa" target="_blank" rel="noopener" href="${wa(s.phone)}">واتساب</a>`:''}</span>
+        <span>👨‍👩‍👦 ولي الأمر: ${s.parentPhone?`<a dir="ltr" href="tel:${esc(s.parentPhone)}">${esc(s.parentPhone)}</a><a class="wa" target="_blank" rel="noopener" href="${wa(s.parentPhone)}">واتساب</a>`:'<span class="no">غير مسجّل</span>'}
+          <a style="cursor:pointer" onclick="editParent(${s.id})">✏️ ${s.parentPhone?'تعديل':'إضافة'}</a></span>
+      </div>
+      <div>${s.courses.map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'<span class="tag">لم يشترك في كورس بعد</span>'}</div>
+    </div>
+    <div class="sm"><span>🎬 شاهد ${s.watched} فيديو</span><span>📅 سجّل في ${new Date(s.joined).toLocaleDateString('ar-EG')}</span>
+      <button onclick="gOpen=${gOpen===s.id?'null':s.id};render()">📝 الدرجات والواجبات (${s.grades.length})</button></div>
+  </div>${gOpen===s.id?`<div style="margin-top:12px;border-top:1px solid var(--line)">${gradesPanel(s)}</div>`:''}</div>`).join('');
+}
+function studentsHTML(){
+  return `<input placeholder="🔍 ابحث بالاسم أو الإيميل أو رقم الموبايل..." value="${esc(q)}" oninput="q=this.value;$('slist').innerHTML=studentCards()" style="margin-bottom:14px"><div id="slist">${studentCards()}</div>`;
 }
 async function reloadS(){students=await api('/api/admin/students');render()}
 async function addGrade(id){
