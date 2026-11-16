@@ -1,614 +1,219 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>منصة د. محمد رمضان التعليمية</title>
-
 <style>
-:root{
---bg:#0b1220;--card:#111a2e;--line:#1e293b;
---accent:#0ea5e9;--text:#f1f5f9;--muted:#94a3b8;
---side:#0f172a;--btn:#2563eb;--ok:#10b981;--gold:#f59e0b
-}
+:root{--bg:#0b1220;--card:#111a2e;--line:#1e293b;--accent:#0ea5e9;--text:#f1f5f9;--muted:#94a3b8;--side:#0f172a;--btn:#2563eb;--ok:#10b981;--gold:#f59e0b}
 *{box-sizing:border-box;margin:0}
-body{
-font-family:'Segoe UI',Tahoma,Arial,sans-serif;
-background:var(--bg);color:var(--text);
-min-height:100vh;display:flex
-}
-aside{
-width:235px;background:var(--side);
-border-left:1px solid var(--line);
-padding:22px 14px;position:fixed;
-top:0;bottom:0;right:0;z-index:10;
-display:flex;flex-direction:column
-}
-.brand{
-text-align:center;margin-bottom:26px;
-padding-bottom:18px;border-bottom:1px solid var(--line)
-}
-.brand img{
-width:82px;height:82px;border-radius:50%;
-object-fit:cover;object-position:top;
-border:3px solid var(--gold);margin-bottom:10px;
-box-shadow:0 4px 15px rgba(245,158,11,.25)
-}
-.brand h2{font-size:1.15rem;color:#fff}
-.brand span{font-size:.78rem;color:var(--accent)}
-aside a{
-display:flex;align-items:center;gap:10px;
-padding:12px 14px;border-radius:10px;
-color:var(--muted);cursor:pointer;margin-bottom:6px;
-font-size:.92rem;transition:.2s
-}
-aside a.on,aside a:hover{
-background:var(--btn);color:#fff;font-weight:600
-}
-aside a.admin-link{
-margin-top:auto;border:1px dashed var(--gold);
-color:var(--gold)
-}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+aside{width:235px;background:var(--side);border-left:1px solid var(--line);padding:22px 14px;position:fixed;top:0;bottom:0;right:0;z-index:10;display:flex;flex-direction:column}
+.brand{text-align:center;margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.brand img{width:82px;height:82px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid var(--gold);margin-bottom:10px;box-shadow:0 4px 15px rgba(245,158,11,.25)}
+.brand h2{font-size:1.15rem;color:#fff}.brand span{font-size:.78rem;color:var(--accent)}
+aside a{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;color:var(--muted);cursor:pointer;margin-bottom:6px;font-size:.92rem;transition:.2s}
+aside a.on,aside a:hover{background:var(--btn);color:#fff;font-weight:600}
+aside a.admin-link{margin-top:auto;border:1px dashed var(--gold);color:var(--gold)}
 aside a.admin-link:hover{background:var(--gold);color:#000}
-
 main{margin-right:235px;flex:1;min-width:0}
-.top{
-background:rgba(15,23,42,.9);
-backdrop-filter:blur(8px);
-border-bottom:1px solid var(--line);
-padding:14px 24px;display:flex;
-align-items:center;gap:14px;
-position:sticky;top:0;z-index:9
-}
+.top{background:rgba(15,23,42,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:9}
 .top h3{color:#fff;font-size:1.1rem}
-.top input{
-flex:1;max-width:400px;margin:0 auto;
-padding:9px 16px;border-radius:20px;
-border:1px solid var(--line);
-background:var(--bg);color:#fff;font:inherit
-}
+.top input{flex:1;max-width:400px;margin:0 auto;padding:9px 16px;border-radius:20px;border:1px solid var(--line);background:var(--bg);color:#fff;font:inherit}
 .top .u{display:flex;gap:8px;align-items:center;font-size:.9rem}
-.menu{
-display:none;background:none;border:0;
-color:#fff;font-size:1.5rem;cursor:pointer
-}
+.menu{display:none;background:none;border:0;color:#fff;font-size:1.5rem;cursor:pointer}
 .wrap{padding:24px;max-width:1200px;margin:0 auto}
-
-.hero{
-background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);
-border:1px solid var(--line);border-radius:20px;
-padding:32px;margin-bottom:28px;
-display:flex;align-items:center;
-justify-content:space-between;gap:30px;
-position:relative;overflow:hidden;
-box-shadow:0 15px 35px rgba(0,0,0,.35)
-}
-.hero-text{flex:1;z-index:2}
-.hero-text .tag{
-background:rgba(245,158,11,.15);color:var(--gold);
-border:1px solid rgba(245,158,11,.3);
-padding:5px 14px;border-radius:20px;
-font-size:.82rem;font-weight:700;
-display:inline-block;margin-bottom:14px
-}
-.hero-text h1{
-font-size:2rem;margin-bottom:12px;
-line-height:1.35;color:#fff
-}
-.hero-text p{
-color:var(--muted);font-size:1rem;
-margin-bottom:22px;max-width:560px;line-height:1.7
-}
+.hero{background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid var(--line);border-radius:20px;padding:32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:30px;box-shadow:0 15px 35px rgba(0,0,0,.35)}
+.hero-text{flex:1}
+.hero-text .tag{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);padding:5px 14px;border-radius:20px;font-size:.82rem;font-weight:700;display:inline-block;margin-bottom:14px}
+.hero-text h1{font-size:2rem;margin-bottom:12px;line-height:1.35;color:#fff}
+.hero-text p{color:var(--muted);margin-bottom:22px;max-width:560px;line-height:1.7}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.hero-main-img{z-index:2;flex-shrink:0;position:relative}
-.hero-main-img img{
-width:230px;height:290px;object-fit:cover;
-object-position:top;border-radius:18px;
-border:3px solid var(--gold);
-box-shadow:0 15px 35px rgba(0,0,0,.5);
-display:block
-}
-.hero-main-img .caption{
-position:absolute;bottom:-12px;right:50%;
-transform:translateX(50%);
-background:var(--side);border:1px solid var(--gold);
-color:#fff;padding:4px 16px;border-radius:20px;
-font-size:.82rem;font-weight:700;white-space:nowrap;
-box-shadow:0 4px 12px rgba(0,0,0,.4)
-}
-
-.stats{
-display:grid;grid-template-columns:repeat(3,1fr);
-gap:16px;margin-bottom:28px
-}
-.stat{
-background:var(--card);border:1px solid var(--line);
-border-radius:14px;padding:20px;text-align:center
-}
-.stat b{display:block;font-size:1.9rem;margin-bottom:4px}
-.stat span{color:var(--muted);font-size:.88rem}
-
+.hero-main-img{flex-shrink:0;position:relative}
+.hero-main-img img{width:230px;height:290px;object-fit:cover;object-position:top;border-radius:18px;border:3px solid var(--gold);box-shadow:0 15px 35px rgba(0,0,0,.5);display:block}
+.hero-main-img .caption{position:absolute;bottom:-12px;right:50%;transform:translateX(50%);background:var(--side);border:1px solid var(--gold);color:#fff;padding:4px 16px;border-radius:20px;font-size:.82rem;font-weight:700;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center}
+.stat b{display:block;font-size:1.9rem;margin-bottom:4px}.stat span{color:var(--muted);font-size:.88rem}
 .tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-.tabs button{
-background:var(--card);color:var(--text);
-border:1px solid var(--line);padding:9px 20px;border-radius:20px
-}
+.tabs button{background:var(--card);color:var(--text);border:1px solid var(--line);padding:9px 20px;border-radius:20px}
 .tabs button.on{background:var(--btn);border-color:var(--btn)}
-
-.grid{
-display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-gap:20px
-}
-.card{
-border:1px solid var(--line);border-radius:14px;
-overflow:hidden;background:var(--card);
-display:flex;flex-direction:column;transition:transform .2s
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);display:flex;flex-direction:column;transition:transform .2s}
 .card:hover{transform:translateY(-4px);border-color:var(--accent)}
-.thumb-wrap{
-position:relative;height:200px;
-background:#1e293b;overflow:hidden
-}
-.thumb-wrap img{
-width:100%;height:100%;
-object-fit:cover;object-position:top
-}
-.plan-tag{
-position:absolute;top:12px;right:12px;
-background:rgba(15,23,42,.88);color:var(--gold);
-border:1px solid var(--gold);padding:3px 12px;
-border-radius:20px;font-size:.78rem;font-weight:700
-}
-.price-tag{
-position:absolute;bottom:12px;left:12px;
-background:var(--ok);color:#fff;padding:4px 12px;
-border-radius:8px;font-weight:800;font-size:.95rem
-}
-.card-body{
-padding:16px;flex:1;display:flex;flex-direction:column
-}
+.thumb-wrap{position:relative;height:200px;background:#1e293b;overflow:hidden}
+.thumb-wrap img{width:100%;height:100%;object-fit:cover;object-position:top}
+.plan-tag{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.88);color:var(--gold);border:1px solid var(--gold);padding:3px 12px;border-radius:20px;font-size:.78rem;font-weight:700}
+.price-tag{position:absolute;bottom:12px;left:12px;background:var(--ok);color:#fff;padding:4px 12px;border-radius:8px;font-weight:800;font-size:.95rem}
+.card-body{padding:16px;flex:1;display:flex;flex-direction:column}
 .card h4{font-size:1.05rem;margin-bottom:8px;color:#fff}
-.card p{
-color:var(--muted);font-size:.85rem;
-line-height:1.5;margin-bottom:16px;flex:1
-}
-button{
-background:var(--btn);color:#fff;border:0;
-padding:11px 18px;border-radius:8px;
-cursor:pointer;font:inherit;font-weight:600
-}
+.card p{color:var(--muted);font-size:.85rem;line-height:1.5;margin-bottom:16px;flex:1}
+button{background:var(--btn);color:#fff;border:0;padding:11px 18px;border-radius:8px;cursor:pointer;font:inherit;font-weight:600}
 .card button{width:100%}
-button.sec{
-background:transparent;border:1px solid var(--line);
-padding:8px 14px
-}
-button:disabled{background:var(--ok);cursor:default}
-
-dialog{
-border:1px solid var(--line);border-radius:16px;
-padding:24px;width:min(420px,92vw);
-background:var(--card);color:var(--text);margin:auto
-}
+button.sec{background:transparent;border:1px solid var(--line);padding:8px 14px}
+dialog{border:1px solid var(--line);border-radius:16px;padding:24px;width:min(420px,92vw);background:var(--card);color:var(--text);margin:auto}
 dialog::backdrop{background:rgba(0,0,0,.75)}
-input.f,select.f,textarea.f{
-width:100%;padding:11px;margin:7px 0;
-border-radius:8px;border:1px solid var(--line);
-background:var(--bg);color:var(--text);font:inherit
-}
+input.f{width:100%;padding:11px;margin:7px 0;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
 .err{color:#f87171;font-size:.85rem;min-height:20px;margin-top:4px}
-
-@media(max-width:850px){
-aside{transform:translateX(100%);transition:.25s}
-aside.open{transform:none}
-main{margin-right:0}
-.menu{display:block}
-.hero{flex-direction:column-reverse;text-align:center;padding:24px 18px}
-.hero-btns{justify-content:center}
-.hero-main-img img{width:190px;height:240px}
-.stats{grid-template-columns:1fr}
-}
+.notice{background:rgba(245,158,11,.12);border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:8px 12px;font-size:.85rem;margin-bottom:8px}
+.cv{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+.player{aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;display:grid;place-items:center}
+.player iframe{width:100%;height:100%;border:0}
+.vl{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;max-height:480px;overflow:auto}
+.vi{padding:11px;border-radius:8px;cursor:pointer;font-size:.9rem}.vi:hover,.vi.on{background:var(--btn)}
+@media(max-width:850px){aside{transform:translateX(100%);transition:.25s}aside.open{transform:none}main{margin-right:0}.menu{display:block}.hero{flex-direction:column-reverse;text-align:center;padding:24px 18px}.hero-btns{justify-content:center}.hero-main-img img{width:190px;height:240px}.stats,.cv{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
-
 <aside id="side">
-  <div class="brand">
-    <img src="/dr2.jpg" alt="د. محمد رمضان">
-    <h2>د. محمد رمضان</h2>
-    <span>المنصة التعليمية الرسمية</span>
-  </div>
-
+  <div class="brand"><img src="/dr2.jpg" alt="د. محمد رمضان"><h2>د. محمد رمضان</h2><span>المنصة التعليمية الرسمية</span></div>
   <a data-v="home" class="on">🏠 الرئيسية</a>
   <a data-v="all">📚 جميع الكورسات</a>
   <a data-v="mine">🎓 كورساتي المشترك بها</a>
   <a id="acc">👤 حسابي</a>
-  <a class="admin-link" onclick="openAdmin()">⚙️ إضافة كورس (للدكتور)</a>
+  <a class="admin-link" href="/admin">⚙️ دخول المدير</a>
 </aside>
-
 <main>
   <div class="top">
     <button class="menu" onclick="side.classList.toggle('open')">☰</button>
     <h3 id="title">الرئيسية</h3>
-    <input id="q" placeholder="ابحث عن كورس..." oninput="render()">
+    <input id="q" placeholder="ابحث عن كورس..." oninput="if(view=='home'||view=='course')view='all';render()">
     <div class="u" id="user"></div>
   </div>
-
   <div class="wrap" id="view"></div>
 </main>
 
 <dialog id="dlg">
   <h3 id="dt" style="margin-bottom:12px"></h3>
+  <div class="notice" id="note" style="display:none"></div>
   <input class="f" id="name" placeholder="الاسم بالكامل">
   <input class="f" id="phone" placeholder="رقم الموبايل (واتساب)">
   <input class="f" id="email" type="email" placeholder="البريد الإلكتروني">
   <input class="f" id="pass" type="password" placeholder="كلمة المرور (6 حروف على الأقل)">
   <div class="err" id="err"></div>
   <button onclick="submitAuth()" style="width:100%">تأكيد</button>
+  <button class="sec" onclick="switchMode()" style="width:100%;margin-top:8px" id="sw"></button>
   <button class="sec" onclick="dlg.close()" style="width:100%;margin-top:8px">إلغاء</button>
-</dialog>
-
-<dialog id="adminDlg">
-  <h3 style="margin-bottom:10px;color:var(--gold)">➕ إضافة كورس جديد للمنصة</h3>
-  <input class="f" id="admPass" type="password" placeholder="باسورد الأدمن (الافتراضي: admin123)">
-  <input class="f" id="cTitle" placeholder="اسم الكورس">
-  <select class="f" id="cPlan">
-    <option value="month">باقة الشهر (150 ج)</option>
-    <option value="term">باقة الترم (450 ج)</option>
-    <option value="year">باقة السنة (950 ج)</option>
-  </select>
-  <input class="f" id="cPrice" type="number" placeholder="السعر بالجنيه">
-  <input class="f" id="cImg" placeholder="رابط الصورة" value="/dr2.jpg">
-  <textarea class="f" id="cDesc" rows="3" placeholder="وصف مختصر..."></textarea>
-  <div class="err" id="admErr"></div>
-  <button onclick="addCourse()" style="width:100%;background:var(--ok)">نشر الكورس الآن</button>
-  <button class="sec" onclick="adminDlg.close()" style="width:100%;margin-top:8px">إغلاق</button>
 </dialog>
 
 <script>
 const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const PLANS={all:'الكل',month:'اشتراك شهري (150 ج)',term:'اشتراك الترم (450 ج)',year:'اشتراك السنة (950 ج)'};
+const BADGE={month:'باقة الشهر',term:'باقة الترم',year:'باقة السنة'};
+let view='home',plan='all',mode='login',token=localStorage.token,courses=[],mine=[],curC=null,vids=[],curV=null;
 
-const PLANS={
-all:'الكل',
-month:'اشتراك شهري (150 ج)',
-term:'اشتراك الترم (450 ج)',
-year:'اشتراك السنة (950 ج)'
-};
+function imagePath(p){const v=String(p||'').trim();if(!v)return '/dr2.jpg';if(/^(https?:|data:|blob:)/i.test(v)||v.startsWith('/'))return v;return '/'+v.replace(/^\.?\//,'')}
 
-const BADGE={
-month:'باقة الشهر',
-term:'باقة الترم',
-year:'باقة السنة'
-};
-
-let view='home',plan='all',mode='login';
-let token=localStorage.token,courses=[],mine=[];
-
-/* توحيد مسارات الصور */
-function imagePath(path){
-  if(!path)return '/dr2.jpg';
-
-  const value=String(path).trim();
-
-  if(!value)return '/dr2.jpg';
-
-  if(/^(https?:|data:|blob:)/i.test(value)){
-    return value;
-  }
-
-  if(value.startsWith('/')){
-    return value;
-  }
-
-  return '/' + value.replace(/^\.?\//,'');
-}
-
-/* الاتصال بالسيرفر */
 async function api(url,opt={}){
-  opt.headers={
-    'Content-Type':'application/json',
-    ...(token?{Authorization:'Bearer '+token}:{}),
-    ...(opt.headers||{})
-  };
-
+  opt.headers={'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{}),...(opt.headers||{})};
   if(opt.body)opt.body=JSON.stringify(opt.body);
-
-  const r=await fetch(url,opt);
-  const d=await r.json();
-
+  const r=await fetch(url,opt),d=await r.json();
   if(!r.ok)throw new Error(d.error||'حصل خطأ');
-
   return d;
 }
 
-/* تحميل البيانات */
+/* الزائر يتصفح عادي، وأي إجراء بيطلب حساب */
+function needLogin(msg){openAuth('login',msg||'لازم تسجّل دخول أو تعمل حساب الأول عشان تكمل')}
+
 async function load(){
   try{
-    courses=await api('/api/courses');
-
-    mine=[];
-
-    if(token){
-      try{
-        mine=(await api('/api/my-courses')).map(c=>c.id);
-      }catch{
-        logout(true);
-      }
-    }
-
+    courses=await api('/api/courses');mine=[];
+    if(token){try{mine=(await api('/api/my-courses')).map(c=>c.id)}catch{logout(true)}}
     $('user').innerHTML=token
-      ?`<span>أهلاً، <b>${localStorage.name||''}</b></span>
-        <button class="sec" onclick="logout()">خروج</button>`
-      :`<button class="sec" onclick="openAuth('login')">تسجيل الدخول</button>
-        <button class="sec" onclick="openAuth('register')">حساب جديد</button>`;
-
+      ?`<span>أهلاً، <b>${esc(localStorage.name)}</b></span><button class="sec" onclick="logout()">خروج</button>`
+      :`<button class="sec" onclick="openAuth('login')">تسجيل الدخول</button><button class="sec" onclick="openAuth('register')">حساب جديد</button>`;
     render();
-
-  }catch(e){
-    console.error('Load error:',e);
-    $('view').innerHTML=
-      '<p style="color:#f87171">حدث خطأ أثناء تحميل البيانات. حاول تحديث الصفحة.</p>';
-  }
+  }catch(e){$('view').innerHTML='<p style="color:#f87171">حدث خطأ أثناء تحميل البيانات. حاول تحديث الصفحة.</p>'}
 }
 
-/* عرض الكورس */
 function card(c){
   const on=mine.includes(c.id);
-  const img=imagePath(c.image);
-
-  return `
-  <div class="card">
-    <div class="thumb-wrap">
-      <img
-        src="${img}"
-        onerror="this.onerror=null;this.src='/dr2.jpg'"
-        alt="${c.title}"
-      >
-      <span class="plan-tag">${BADGE[c.plan]||c.plan}</span>
-      <span class="price-tag">${c.price} جنيه</span>
-    </div>
-
-    <div class="card-body">
-      <h4>${c.title}</h4>
-      <p>${c.desc}</p>
-
-      ${
-        on
-        ?'<button disabled>✅ أنت مشترك في هذا الكورس</button>'
-        :`<button onclick="enroll(${c.id})">اشترك الآن (${c.price} ج)</button>`
-      }
-    </div>
-  </div>`;
+  return `<div class="card"><div class="thumb-wrap">
+    <img src="${esc(imagePath(c.image))}" onerror="this.onerror=null;this.src='/dr2.jpg'" alt="${esc(c.title)}">
+    <span class="plan-tag">${BADGE[c.plan]||esc(c.plan)}</span><span class="price-tag">${+c.price} جنيه</span></div>
+    <div class="card-body"><h4>${esc(c.title)}</h4><p>${esc(c.desc)}</p>
+    ${on?`<button style="background:var(--ok)" onclick="openCourse(${c.id})">▶ الدخول للكورس</button>`
+        :`<button onclick="enroll(${c.id})">اشترك الآن (${+c.price} ج)</button>`}</div></div>`;
 }
 
-/* عرض الصفحات */
+function embed(u){const m=String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return m?'https://www.youtube.com/embed/'+m[1]:null}
+
+function courseView(){
+  const v=curV,e=v&&embed(v.url);
+  return `<button class="sec" onclick="view='mine';render()" style="margin-bottom:14px">➡️ رجوع لكورساتي</button>
+  <h2 style="margin-bottom:14px">${esc(curC.title)}</h2>
+  <div class="cv"><div>
+    <div class="player">${!v?'<p style="color:var(--muted)">لا توجد فيديوهات في هذا الكورس بعد.</p>'
+      :e?`<iframe src="${e}" allowfullscreen></iframe>`
+      :`<a href="${esc(v.url)}" target="_blank" rel="noopener"><button>▶ افتح الفيديو</button></a>`}</div>
+    ${v?`<h3 style="margin-top:12px">${esc(v.title)}</h3>`:''}</div>
+  <div class="vl">${vids.map((x,i)=>`<div class="vi ${v&&x.id==v.id?'on':''}" onclick="playV(${x.id})">${i+1}. ${esc(x.title)}</div>`).join('')||'<p style="color:var(--muted);padding:8px">فارغ</p>'}</div></div>`;
+}
+
 function render(){
   const q=$('q').value.trim();
-
-  const titles={
-    home:'الرئيسية',
-    all:'جميع الكورسات',
-    mine:'كورساتي'
-  };
-
-  $('title').textContent=titles[view];
-
-  document.querySelectorAll('aside a[data-v]').forEach(a=>{
-    a.classList.toggle('on',a.dataset.v==view);
-  });
-
-  let list=courses.filter(c=>
-    (plan=='all'||c.plan==plan)&&
-    (!q||c.title.includes(q)||c.desc.includes(q))
-  );
-
-  if(view=='mine'){
-    list=list.filter(c=>mine.includes(c.id));
-  }
-
+  $('title').textContent={home:'الرئيسية',all:'جميع الكورسات',mine:'كورساتي',course:'الكورس'}[view];
+  document.querySelectorAll('aside a[data-v]').forEach(a=>a.classList.toggle('on',a.dataset.v==view));
+  let list=courses.filter(c=>(plan=='all'||c.plan==plan)&&(!q||c.title.includes(q)||c.desc.includes(q)));
+  if(view=='mine')list=list.filter(c=>mine.includes(c.id));
   let h='';
-
-  if(view=='home'){
-
-    h+=`
-    <div class="hero">
-
-      <div class="hero-text">
-        <span class="tag">✨ المنصة التعليمية الأولى للتفوق والتميز</span>
-
-        <h1>أهلاً بك في منصة د. محمد رمضان</h1>
-
-        <p>
-        معك خطوة بخطوة لفهم المادة بأبسط أسلوب وأقوى تطبيق عملي.
-        اختر الباقة التي تناسبك وابدأ رحلة التفوق الآن.
-        </p>
-
-        <div class="hero-btns">
-          <button onclick="view='all';render()">تصفح جميع الكورسات ⬅️</button>
-
-          ${!token
-          ?`<button class="sec" onclick="openAuth('register')">إنشاء حساب طالب جديد</button>`
-          :''}
-        </div>
-      </div>
-
-      <div class="hero-main-img">
-        <img
-          src="/dr2.jpg"
-          alt="د. محمد رمضان"
-          onerror="this.onerror=null;this.src='/dr1.jpg'"
-        >
-        <div class="caption">د. محمد رمضان</div>
-      </div>
-
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <b style="color:var(--accent)">150 ج</b>
-        <span>اشتراك الشهر</span>
-      </div>
-
-      <div class="stat">
-        <b style="color:var(--ok)">450 ج</b>
-        <span>اشتراك الترم الكامل</span>
-      </div>
-
-      <div class="stat">
-        <b style="color:var(--gold)">950 ج</b>
-        <span>باقة السنة الشاملة</span>
-      </div>
-    </div>
-
-    <h2 style="margin-bottom:16px">🔥 الكورسات والباقات المتاحة</h2>
-
-    <div class="grid">
-      ${courses.map(card).join('')}
-    </div>`;
-
+  if(view=='course')h=courseView();
+  else if(view=='home'){
+    h=`<div class="hero"><div class="hero-text"><span class="tag">✨ المنصة التعليمية الأولى للتفوق والتميز</span>
+    <h1>أهلاً بك في منصة د. محمد رمضان</h1>
+    <p>معك خطوة بخطوة لفهم المادة بأبسط أسلوب وأقوى تطبيق عملي. اختر الباقة التي تناسبك وابدأ رحلة التفوق الآن.</p>
+    <div class="hero-btns"><button onclick="view='all';render()">تصفح جميع الكورسات ⬅️</button>
+    ${!token?`<button class="sec" onclick="openAuth('register')">إنشاء حساب طالب جديد</button>`:''}</div></div>
+    <div class="hero-main-img"><img src="/dr2.jpg" alt="د. محمد رمضان" onerror="this.onerror=null;this.src='/dr1.jpg'"><div class="caption">د. محمد رمضان</div></div></div>
+    <div class="stats"><div class="stat"><b style="color:var(--accent)">150 ج</b><span>اشتراك الشهر</span></div>
+    <div class="stat"><b style="color:var(--ok)">450 ج</b><span>اشتراك الترم الكامل</span></div>
+    <div class="stat"><b style="color:var(--gold)">950 ج</b><span>باقة السنة الشاملة</span></div></div>
+    <h2 style="margin-bottom:16px">🔥 الكورسات والباقات المتاحة</h2><div class="grid">${courses.map(card).join('')}</div>`;
   }else{
-
-    h+=`
-    <div class="tabs">
-      ${Object.entries(PLANS).map(([k,v])=>
-        `<button class="${k==plan?'on':''}"
-        onclick="plan='${k}';render()">${v}</button>`
-      ).join('')}
-    </div>`;
-
-    h+=list.length
-      ?`<div class="grid">${list.map(card).join('')}</div>`
-      :'<p style="color:var(--muted)">مفيش كورسات مطابقة لبحثك.</p>';
+    h=`<div class="tabs">${Object.entries(PLANS).map(([k,v])=>`<button class="${k==plan?'on':''}" onclick="plan='${k}';render()">${v}</button>`).join('')}</div>`;
+    h+=list.length?`<div class="grid">${list.map(card).join('')}</div>`:'<p style="color:var(--muted)">مفيش كورسات مطابقة.</p>';
   }
-
   $('view').innerHTML=h;
 }
 
-/* التنقل بين الصفحات */
-document.querySelectorAll('aside a[data-v]').forEach(a=>{
-  a.onclick=()=>{
-    if(a.dataset.v=='mine'&&!token){
-      return openAuth('login');
-    }
-
-    view=a.dataset.v;
-    plan='all';
-    side.classList.remove('open');
-    render();
-  };
+document.querySelectorAll('aside a[data-v]').forEach(a=>a.onclick=()=>{
+  if(a.dataset.v=='mine'&&!token)return needLogin('سجّل دخولك الأول عشان تشوف كورساتك');
+  view=a.dataset.v;plan='all';side.classList.remove('open');render();
 });
+$('acc').onclick=()=>token?alert('الاسم: '+localStorage.name):needLogin('سجّل دخولك الأول عشان تشوف حسابك');
 
-$('acc').onclick=()=>token
-  ?alert('بيانات حسابك:\nالاسم: '+localStorage.name)
-  :openAuth('login');
-
-/* تسجيل الدخول وإنشاء الحساب */
-function openAuth(m){
+function openAuth(m,note){
   mode=m;
-
-  $('dt').textContent=
-    m=='login'?'تسجيل الدخول':'إنشاء حساب طالب جديد';
-
-  $('name').style.display=
-    $('phone').style.display=
-    m=='login'?'none':'block';
-
-  $('err').textContent='';
-
-  dlg.showModal();
+  $('dt').textContent=m=='login'?'تسجيل الدخول':'إنشاء حساب طالب جديد';
+  $('name').style.display=$('phone').style.display=m=='login'?'none':'block';
+  $('sw').textContent=m=='login'?'معنديش حساب؟ سجّل حساب جديد':'عندي حساب؟ سجّل دخول';
+  $('note').style.display=note?'block':'none';$('note').textContent=note||'';
+  $('err').textContent='';dlg.showModal();
 }
+function switchMode(){openAuth(mode=='login'?'register':'login',$('note').textContent)}
 
 async function submitAuth(){
   try{
-    const d=await api('/api/'+mode,{
-      method:'POST',
-      body:{
-        email:$('email').value,
-        password:$('pass').value,
-        name:$('name').value,
-        phone:$('phone').value
-      }
-    });
-
-    token=localStorage.token=d.token;
-    localStorage.name=d.name;
-
-    dlg.close();
-    load();
-
-  }catch(e){
-    $('err').textContent=e.message;
-  }
+    const d=await api('/api/'+mode,{method:'POST',body:{email:$('email').value,password:$('pass').value,name:$('name').value,phone:$('phone').value}});
+    token=localStorage.token=d.token;localStorage.name=d.name;dlg.close();load();
+  }catch(e){$('err').textContent=e.message}
 }
+function logout(s){localStorage.clear();token=null;mine=[];view='home';if(!s)load()}
 
-/* تسجيل الخروج */
-function logout(s){
-  localStorage.clear();
-  token=null;
-  mine=[];
-  view='home';
-
-  if(!s)load();
-}
-
-/* الاشتراك في الكورس */
 async function enroll(id){
-  if(!token)return openAuth('login');
-
-  try{
-    await api('/api/enroll',{
-      method:'POST',
-      body:{courseId:id}
-    });
-
-    await load();
-
-    alert('تم الاشتراك في الكورس بنجاح ✅');
-
-  }catch(e){
-    alert(e.message);
-  }
+  if(!token)return needLogin('سجّل دخولك الأول عشان تشترك في الكورس');
+  try{await api('/api/enroll',{method:'POST',body:{courseId:id}});await load();alert('تم الاشتراك في الكورس بنجاح ✅')}
+  catch(e){alert(e.message)}
 }
-
-/* لوحة تحكم الدكتور */
-function openAdmin(){
-  $('admErr').textContent='';
-  adminDlg.showModal();
+async function openCourse(id){
+  if(!token)return needLogin('سجّل دخولك الأول عشان تدخل الكورس');
+  try{curC=courses.find(c=>c.id==id);vids=await api('/api/courses/'+id+'/videos');curV=vids[0]||null;view='course';render()}
+  catch(e){alert(e.message)}
 }
+function playV(id){curV=vids.find(v=>v.id==id);render()}
 
-/* إضافة كورس */
-async function addCourse(){
-  try{
-    await api('/api/admin/courses',{
-      method:'POST',
-      headers:{
-        'x-admin-password':$('admPass').value
-      },
-      body:{
-        title:$('cTitle').value,
-        plan:$('cPlan').value,
-        price:$('cPrice').value,
-        image:imagePath($('cImg').value),
-        desc:$('cDesc').value
-      }
-    });
-
-    adminDlg.close();
-
-    await load();
-
-    alert('تم نشر الكورس بنجاح ✅');
-
-  }catch(e){
-    $('admErr').textContent=e.message;
-  }
-}
-
-/* بدء الموقع */
 load();
-
 </script>
-
 </body>
 </html>
