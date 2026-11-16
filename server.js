@@ -11,8 +11,7 @@ const DB = process.env.VERCEL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 
 app.use(express.json());
-// قراءة الملفات الثابتة والصور من مجلد public
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 const seed = {
   courses: [
@@ -37,7 +36,7 @@ const auth = (req, res, next) => {
 const hash = p => crypto.createHash('sha256').update(p).digest('hex');
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/api/courses', (req, res) => {
