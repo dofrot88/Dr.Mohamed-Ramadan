@@ -5,7 +5,11 @@ const path = require('path');
 const crypto = require('crypto');
 
 const app = express();
-const DB = path.join(__dirname, 'db.json');
+// استخدام مجلد /tmp على Vercel لأن المجلد الرئيسي للقراءة فقط
+const DB = process.env.VERCEL 
+  ? path.join('/tmp', 'db.json') 
+  : path.join(__dirname, 'db.json');
+
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'; // غيّرها!
 
 app.use(express.json());
@@ -27,6 +31,7 @@ const seed = {
   ],
   students: [], enrollments: []
 };
+
 const load = () => { if (!fs.existsSync(DB)) save(seed); return JSON.parse(fs.readFileSync(DB, 'utf8')); };
 const save = d => fs.writeFileSync(DB, JSON.stringify(d, null, 2));
 const tokens = new Map(); // token -> studentId
@@ -37,6 +42,11 @@ const auth = (req, res, next) => {
   req.studentId = id; next();
 };
 const hash = p => crypto.createHash('sha256').update(p).digest('hex');
+
+// عرض الصفحة الرئيسية من فولدر public
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // الكورسات (ممكن فلترة بالخطة)
 app.get('/api/courses', (req, res) => {
@@ -93,4 +103,10 @@ app.post('/api/admin/courses', (req, res) => {
   db.courses.push(c); save(db); res.json(c);
 });
 
-app.listen(process.env.PORT || 3000, () => console.log('http://localhost:3000'));
+// تشغيل السيرفر محلياً فقط
+if (!process.env.VERCEL) {
+  app.listen(process.env.PORT || 3000, () => console.log('http://localhost:3000'));
+}
+
+// تصدير السيرفر لـ Vercel
+module.exports = app;
