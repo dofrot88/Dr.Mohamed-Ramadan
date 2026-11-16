@@ -58,6 +58,7 @@ const load = async () => {
   if (!d) { d = JSON.parse(JSON.stringify(seed)); await save(d); }
   if (!d.courses || !d.courses.length) { d.courses = seed.courses; await save(d); }
   d.courses.forEach(c => { if (!c.videos) c.videos = []; });
+  d.watch = d.watch || []; d.grades = d.grades || [];
   return d;
 };
 
@@ -99,12 +100,12 @@ app.get('/api/courses', async (req, res) => {
 
 // ---------- الطلاب ----------
 app.post('/api/register', async (req, res) => {
-  const { name, email, password, phone } = req.body;
-  if (!name || !email || !password || password.length < 6)
-    return res.status(400).json({ error: 'البيانات ناقصة (الباسورد 6 حروف على الأقل)' });
+  const { name, email, password, phone, parentPhone } = req.body;
+  if (!name || !email || !password || password.length < 6 || !String(parentPhone || '').trim())
+    return res.status(400).json({ error: 'البيانات ناقصة (الباسورد 6 حروف على الأقل، ورقم ولي الأمر مطلوب)' });
   const db = (await load());
   if (db.students.find(s => s.email === email)) return res.status(400).json({ error: 'الإيميل مستخدم' });
-  const s = { id: Date.now(), name, email, phone: phone || '', password: hash(password) };
+  const s = { id: Date.now(), name, email, phone: phone || '', parentPhone: String(parentPhone).trim(), password: hash(password) };
   db.students.push(s); await save(db);
   res.json({ token: sign({ sid: s.id, exp: Date.now() + 30 * DAY }), name });
 });
@@ -138,6 +139,35 @@ app.get('/api/courses/:id/videos', auth, async (req, res) => {
     return res.status(403).json({ error: 'لازم تشترك في الكورس الأول' });
   const c = db.courses.find(x => x.id === id);
   res.json(c ? c.videos : []);
+});
+
+// تسجيل مشاهدة فيديو (للمشترك فقط)
+app.post('/api/watch', auth, async (req, res) => {
+  const db = await load(); const courseId = +req.body.courseId, videoId = +req.body.videoId;
+  const c = db.courses.find(x => x.id === courseId);
+  if (!c || !c.videos.find(v => v.id === videoId) || !db.enrollments.find(e => e.studentId === req.studentId && e.courseId === courseId))
+    return res.status(400).json({ error: 'غير مسموح' });
+  if (!db.watch.find(w => w.studentId === req.studentId && w.videoId === videoId)) {
+    db.watch.push({ studentId: req.studentId, courseId, videoId, date: new Date().toISOString() });
+    await save(db);
+  }
+  res.json({ ok: true });
+});
+
+// صفحة "حسابي": بيانات + مشاهدات + درجات (قراءة فقط، مفيش تعديل من الطالب)
+app.get('/api/me', auth, async (req, res) => {
+  const db = await load(); const s = db.students.find(x => x.id === req.studentId);
+  if (!s) return res.status(404).json({ error: 'الحساب مش موجود' });
+  const ids = db.enrollments.filter(e => e.studentId === s.id).map(e => e.courseId);
+  const seen = new Set(db.watch.filter(w => w.studentId === s.id).map(w => w.videoId));
+  res.json({
+    name: s.name, email: s.email, phone: s.phone, parentPhone: s.parentPhone || '',
+    courses: db.courses.filter(c => ids.includes(c.id)).map(c => ({
+      id: c.id, title: c.title, videos: c.videos.map(v => ({ id: v.id, title: v.title, watched: seen.has(v.id) }))
+    })),
+    grades: db.grades.filter(g => g.studentId === s.id)
+      .map(g => ({ ...g, course: (db.courses.find(c => c.id === g.courseId) || {}).title || '' }))
+  });
 });
 
 // ---------- المدير ----------
@@ -180,11 +210,35 @@ app.delete('/api/admin/courses/:id/videos/:vid', adminAuth, async (req, res) => 
   await save(db); res.json(c);
 });
 
+app.post('/api/admin/grades', adminAuth, async (req, res) => {
+  const { studentId, courseId, type, title, score, max } = req.body;
+  if (!['exam', 'homework'].includes(type) || !title || score === '' || isNaN(+score) || !(+max > 0))
+    return res.status(400).json({ error: 'اكتب الاسم والدرجة والدرجة الكبرى صح' });
+  const db = await load();
+  if (!db.students.find(s => s.id === +studentId)) return res.status(404).json({ error: 'الطالب مش موجود' });
+  const g = { id: Date.now(), studentId: +studentId, courseId: +courseId || 0, type, title, score: +score, max: +max, date: new Date().toISOString() };
+  db.grades.push(g); await save(db); res.json(g);
+});
+
+app.delete('/api/admin/grades/:id', adminAuth, async (req, res) => {
+  const db = await load(); db.grades = db.grades.filter(g => g.id !== +req.params.id);
+  await save(db); res.json({ ok: true });
+});
+
+app.post('/api/admin/students/:id/parent', adminAuth, async (req, res) => {
+  const db = await load(); const s = db.students.find(x => x.id === +req.params.id);
+  if (!s || !String(req.body.parentPhone || '').trim()) return res.status(400).json({ error: 'بيانات غلط' });
+  s.parentPhone = String(req.body.parentPhone).trim(); await save(db); res.json({ ok: true });
+});
+
 app.get('/api/admin/students', adminAuth, async (req, res) => {
   const db = (await load());
   res.json(db.students.map(s => ({
     id: s.id, name: s.name, email: s.email, phone: s.phone,
-    joined: new Date(s.id).toISOString(),
+    joined: new Date(s.id).toISOString(), parentPhone: s.parentPhone || '',
+    watched: db.watch.filter(w => w.studentId === s.id).length,
+    grades: db.grades.filter(g => g.studentId === s.id),
+    courseList: db.enrollments.filter(e => e.studentId === s.id).map(e => db.courses.find(c => c.id === e.courseId)).filter(Boolean).map(c => ({ id: c.id, title: c.title })),
     courses: db.enrollments.filter(e => e.studentId === s.id)
       .map(e => (db.courses.find(c => c.id === e.courseId) || {}).title).filter(Boolean)
   })));
