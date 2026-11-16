@@ -11,7 +11,7 @@ const DB = process.env.VERCEL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 
 app.use(express.json());
-app.use(express.static(__dirname)); // لخدمة الصور والملفات من المجلد الرئيسي مباشرة
+app.use(express.static(__dirname));
 
 const seed = {
   courses: [
@@ -35,7 +35,6 @@ const auth = (req, res, next) => {
 };
 const hash = p => crypto.createHash('sha256').update(p).digest('hex');
 
-// توجيه الصفحة الرئيسية لملف index.html بوضوح تام لمنع خطأ Cannot GET
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
