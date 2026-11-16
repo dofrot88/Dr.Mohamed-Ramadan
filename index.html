@@ -8,16 +8,16 @@
 :root{--bg:#0b1220;--card:#111a2e;--line:#1e293b;--accent:#0ea5e9;--text:#f1f5f9;--muted:#94a3b8;--side:#0f172a;--btn:#2563eb;--ok:#10b981;--gold:#f59e0b}
 *{box-sizing:border-box;margin:0}
 body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
-aside{width:230px;background:var(--side);border-left:1px solid var(--line);padding:22px 14px;position:fixed;top:0;bottom:0;right:0;z-index:10;display:flex;flex-direction:column}
+aside{width:235px;background:var(--side);border-left:1px solid var(--line);padding:22px 14px;position:fixed;top:0;bottom:0;right:0;z-index:10;display:flex;flex-direction:column}
 .brand{text-align:center;margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid var(--line)}
-.brand img{width:76px;height:76px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid var(--accent);margin-bottom:8px}
+.brand img{width:82px;height:82px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid var(--gold);margin-bottom:10px;box-shadow:0 4px 15px rgba(245,158,11,.25)}
 .brand h2{font-size:1.15rem;color:#fff}
 .brand span{font-size:.78rem;color:var(--accent)}
 aside a{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;color:var(--muted);cursor:pointer;margin-bottom:6px;font-size:.92rem;transition:.2s}
 aside a.on,aside a:hover{background:var(--btn);color:#fff;font-weight:600}
 aside a.admin-link{margin-top:auto;border:1px dashed var(--gold);color:var(--gold)}
 aside a.admin-link:hover{background:var(--gold);color:#000}
-main{margin-right:230px;flex:1;min-width:0}
+main{margin-right:235px;flex:1;min-width:0}
 .top{background:rgba(15,23,42,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:9}
 .top h3{color:#fff;font-size:1.1rem}
 .top input{flex:1;max-width:400px;margin:0 auto;padding:9px 16px;border-radius:20px;border:1px solid var(--line);background:var(--bg);color:#fff;font:inherit}
@@ -25,39 +25,43 @@ main{margin-right:230px;flex:1;min-width:0}
 .menu{display:none;background:none;border:0;color:#fff;font-size:1.5rem;cursor:pointer}
 .wrap{padding:24px;max-width:1200px;margin:0 auto}
 
-/* Hero Banner */
-.hero{background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;overflow:hidden}
+/* الواجهة الأساسية (Hero Section) بالصورة الرئيسية */
+.hero{background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);border:1px solid var(--line);border-radius:20px;padding:32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:30px;position:relative;overflow:hidden;box-shadow:0 15px 35px rgba(0,0,0,.35)}
+.hero::before{content:'';position:absolute;top:-50%;left:-10%;width:350px;height:350px;background:radial-gradient(circle,rgba(14,165,233,.15),transparent 70%);pointer-events:none}
 .hero-text{flex:1;z-index:2}
-.hero-text .tag{background:rgba(14,165,233,.15);color:var(--accent);padding:4px 12px;border-radius:20px;font-size:.8rem;font-weight:600;display:inline-block;margin-bottom:10px}
-.hero-text h1{font-size:1.7rem;margin-bottom:8px;line-height:1.4}
-.hero-text p{color:var(--muted);font-size:.95rem;margin-bottom:16px;max-width:540px;line-height:1.6}
-.hero-imgs{display:flex;gap:12px;z-index:2}
-.hero-imgs img{width:130px;height:165px;object-fit:cover;object-position:top;border-radius:12px;border:2px solid var(--accent);box-shadow:0 10px 25px rgba(0,0,0,.4)}
+.hero-text .tag{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);padding:5px 14px;border-radius:20px;font-size:.82rem;font-weight:700;display:inline-block;margin-bottom:14px}
+.hero-text h1{font-size:2rem;margin-bottom:12px;line-height:1.35;color:#fff}
+.hero-text p{color:var(--muted);font-size:1rem;margin-bottom:22px;max-width:560px;line-height:1.7}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.hero-main-img{z-index:2;flex-shrink:0;position:relative}
+.hero-main-img img{width:230px;height:290px;object-fit:cover;object-position:top;border-radius:18px;border:3px solid var(--gold);box-shadow:0 15px 35px rgba(0,0,0,.5);display:block}
+.hero-main-img .caption{position:absolute;bottom:-12px;right:50%;transform:translateX(50%);background:var(--side);border:1px solid var(--gold);color:#fff;padding:4px 16px;border-radius:20px;font-size:.82rem;font-weight:700;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center}
-.stat b{display:block;font-size:1.8rem;margin-bottom:4px}.stat span{color:var(--muted);font-size:.85rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;transition:.2s}
+.stat:hover{border-color:var(--accent)}
+.stat b{display:block;font-size:1.9rem;margin-bottom:4px}.stat span{color:var(--muted);font-size:.88rem}
 
 .tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-.tabs button{background:var(--card);color:var(--text);border:1px solid var(--line);padding:8px 18px;border-radius:20px}
+.tabs button{background:var(--card);color:var(--text);border:1px solid var(--line);padding:9px 20px;border-radius:20px}
 .tabs button.on{background:var(--btn);border-color:var(--btn)}
 
-/* Course Cards */
+/* كروت الكورسات */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
 .card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
 .card:hover{transform:translateY(-4px);border-color:var(--accent)}
-.thumb-wrap{position:relative;height:190px;background:#1e293b;overflow:hidden}
+.thumb-wrap{position:relative;height:200px;background:#1e293b;overflow:hidden}
 .thumb-wrap img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .3s}
 .card:hover .thumb-wrap img{transform:scale(1.05)}
-.plan-tag{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.85);backdrop-filter:blur(4px);color:var(--gold);border:1px solid var(--gold);padding:3px 12px;border-radius:20px;font-size:.78rem;font-weight:700}
+.plan-tag{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.88);backdrop-filter:blur(4px);color:var(--gold);border:1px solid var(--gold);padding:3px 12px;border-radius:20px;font-size:.78rem;font-weight:700}
 .price-tag{position:absolute;bottom:12px;left:12px;background:var(--ok);color:#fff;padding:4px 12px;border-radius:8px;font-weight:800;font-size:.95rem;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .card-body{padding:16px;flex:1;display:flex;flex-direction:column}
 .card h4{font-size:1.05rem;margin-bottom:8px;color:#fff}
 .card p{color:var(--muted);font-size:.85rem;line-height:1.5;margin-bottom:16px;flex:1}
-button{background:var(--btn);color:#fff;border:0;padding:11px 16px;border-radius:8px;cursor:pointer;font:inherit;font-weight:600;transition:.2s}
+button{background:var(--btn);color:#fff;border:0;padding:11px 18px;border-radius:8px;cursor:pointer;font:inherit;font-weight:600;transition:.2s}
 button:hover{opacity:.9}
 .card button{width:100%}
-button.sec{background:transparent;border:1px solid var(--line);padding:7px 14px}
+button.sec{background:transparent;border:1px solid var(--line);padding:8px 14px}
 button:disabled{background:var(--ok);cursor:default}
 
 dialog{border:1px solid var(--line);border-radius:16px;padding:24px;width:min(420px,92vw);background:var(--card);color:var(--text);margin:auto}
@@ -68,8 +72,9 @@ input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8
 @media(max-width:850px){
  aside{transform:translateX(100%);transition:.25s}aside.open{transform:none}
  main{margin-right:0}.menu{display:block}
- .hero{flex-direction:column;text-align:center}
- .hero-imgs img{width:110px;height:140px}
+ .hero{flex-direction:column-reverse;text-align:center;padding:24px 18px}
+ .hero-btns{justify-content:center}
+ .hero-main-img img{width:190px;height:240px}
  .stats{grid-template-columns:1fr}
 }
 </style>
@@ -77,7 +82,7 @@ input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8
 <body>
 <aside id="side">
   <div class="brand">
-    <img src="dr1.jpg" onerror="this.style.display='none'" alt="د. محمد رمضان">
+    <img src="dr2.jpg" alt="د. محمد رمضان">
     <h2>د. محمد رمضان</h2>
     <span>المنصة التعليمية الرسمية</span>
   </div>
@@ -121,7 +126,7 @@ input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8
     <option value="year">باقة السنة (950 ج)</option>
   </select>
   <input class="f" id="cPrice" type="number" placeholder="السعر بالجنيه (مثال: 150)">
-  <input class="f" id="cImg" placeholder="اسم الصورة أو رابطها (مثال: dr1.jpg أو dr2.jpg)" value="dr1.jpg">
+  <input class="f" id="cImg" placeholder="اسم الصورة أو رابطها" value="dr2.jpg">
   <textarea class="f" id="cDesc" rows="3" placeholder="وصف مختصر لمحتوى الكورس..."></textarea>
   <div class="err" id="admErr"></div>
   <button onclick="addCourse()" style="width:100%;background:var(--ok)">نشر الكورس الآن</button>
@@ -146,16 +151,16 @@ async function load(){
   mine=[];
   if(token){try{mine=(await api('/api/my-courses')).map(c=>c.id)}catch{logout(true)}}
   $('user').innerHTML=token?`<span>أهلاً، <b>${localStorage.name}</b></span><button class="sec" onclick="logout()">خروج</button>`
-    :`<button class="sec" onclick="openAuth('login')">تسجيل الدخول</button><button onclick="openAuth('register')">حساب جديد</button>`;
+    :`<button class="sec" onclick="openAuth('login')">تسجيل الدخول</button><button class="sec" onclick="openAuth('register')">حساب جديد</button>`;
   render();
 }
 
 function card(c){
   const on=mine.includes(c.id);
-  const img=c.image||'dr1.jpg';
+  const img=c.image||'dr2.jpg';
   return `<div class="card">
     <div class="thumb-wrap">
-      <img src="${img}" onerror="this.src='dr1.jpg'" alt="${c.title}">
+      <img src="${img}" onerror="this.src='dr2.jpg'" alt="${c.title}">
       <span class="plan-tag">${BADGE[c.plan]||c.plan}</span>
       <span class="price-tag">${c.price} جنيه</span>
     </div>
@@ -177,14 +182,17 @@ function render(){
   if(view=='home'){
     h+=`<div class="hero">
       <div class="hero-text">
-        <span class="tag">✨ الطريق الأسهل للتفوق والتميز</span>
-        <h1>منصة د. محمد رمضان التعليمية</h1>
-        <p>اختر الباقة المناسبة ليك (شهري بـ 150 ج، ترم كامل بـ 450 ج، أو باقة السنة الشاملة بـ 950 ج) وابدأ رحلتك التعليمية بأحدث طرق الشرح والمتابعة.</p>
-        <button onclick="view='all';render()">استكشف الكورسات الآن ⬅️</button>
+        <span class="tag">✨ المنصة التعليمية الأولى للتفوق والتميز</span>
+        <h1>أهلاً بك في منصة د. محمد رمضان</h1>
+        <p>معك خطوة بخطوة لفهم المادة بأبسط أسلوب وأقوى تطبيق عملي. اختر الباقة التي تناسبك وابدأ رحلة التفوق الآن.</p>
+        <div class="hero-btns">
+          <button onclick="view='all';render()">تصفح جميع الكورسات ⬅️</button>
+          ${!token?`<button class="sec" onclick="openAuth('register')">إنشاء حساب طالب جديد</button>`:''}
+        </div>
       </div>
-      <div class="hero-imgs">
-        <img src="dr1.jpg" onerror="this.style.display='none'" alt="د. محمد رمضان">
-        <img src="dr2.jpg" onerror="this.style.display='none'" alt="تكريم د. محمد رمضان">
+      <div class="hero-main-img">
+        <img src="dr2.jpg" alt="د. محمد رمضان">
+        <div class="caption">د. محمد رمضان</div>
       </div>
     </div>
     <div class="stats">
