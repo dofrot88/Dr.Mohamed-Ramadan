@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة المدير</title>
+<style>
+:root{--bg:#0b1220;--card:#111a2e;--line:#1e293b;--text:#f1f5f9;--muted:#94a3b8;--btn:#2563eb;--ok:#10b981;--gold:#f59e0b;--red:#ef4444}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button{background:var(--btn);color:#fff;border:0;padding:9px 16px;border-radius:8px;cursor:pointer;font:inherit;font-weight:600}
+button.sec{background:transparent;border:1px solid var(--line)}button.del{background:var(--red);padding:5px 10px;font-size:.8rem}
+input,select,textarea{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
+.login{max-width:360px;margin:12vh auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;text-align:center}
+.login h2{color:var(--gold);margin-bottom:14px}
+.err{color:#f87171;font-size:.85rem;min-height:20px;margin:4px 0}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.wrap{max-width:1100px;margin:0 auto;padding:22px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+.stat b{display:block;font-size:1.8rem;color:var(--gold)}.stat span{color:var(--muted);font-size:.85rem}
+.tabs{display:flex;gap:8px;margin-bottom:18px}.tabs button{background:var(--card);border:1px solid var(--line)}.tabs button.on{background:var(--btn)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.box h3{margin-bottom:10px;color:var(--gold);font-size:1rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.course{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:var(--card)}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;cursor:pointer;flex-wrap:wrap}
+.badge{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:2px 10px;font-size:.75rem;margin-inline-start:8px}
+.vids{border-top:1px solid var(--line);padding:14px}
+.v{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.v a{color:#38bdf8;font-size:.85rem;word-break:break-all}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{padding:10px;text-align:right;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
+.tag{display:inline-block;background:var(--line);border-radius:6px;padding:2px 8px;margin:2px;font-size:.78rem}
+@media(max-width:700px){.stats,.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="loginView" class="login" style="display:none">
+  <h2>🔐 دخول المدير</h2>
+  <input id="u" placeholder="اسم المستخدم" autocomplete="username">
+  <input id="p" type="password" placeholder="كلمة المرور" autocomplete="current-password" onkeydown="if(event.key=='Enter')login()">
+  <div class="err" id="lerr"></div>
+  <button style="width:100%" onclick="login()">دخول</button>
+</div>
+
+<div id="app" style="display:none">
+  <header><b>⚙️ لوحة تحكم د. محمد رمضان</b>
+    <div><button class="sec" onclick="location.href='/'">الموقع</button> <button class="sec" onclick="out()">خروج</button></div></header>
+  <div class="wrap">
+    <div class="stats" id="stats"></div>
+    <div class="tabs">
+      <button id="t-courses" onclick="tab('courses')">📚 الكورسات والفيديوهات</button>
+      <button id="t-students" onclick="tab('students')">👥 بيانات الطلاب</button>
+    </div>
+    <div id="main"></div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const PLAN={month:'شهري',term:'ترم',year:'سنة'};
+let T=sessionStorage.adminToken,courses=[],students=[],cur='courses',openId=null,q='';
+
+async function api(u,o={}){
+  o.headers={'Content-Type':'application/json',Authorization:'Bearer '+T};
+  if(o.body)o.body=JSON.stringify(o.body);
+  const r=await fetch(u,o),d=await r.json().catch(()=>({}));
+  if(r.status==403){out();throw new Error(d.error)}
+  if(!r.ok)throw new Error(d.error||'حصل خطأ');
+  return d;
+}
+async function login(){
+  try{
+    const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('u').value,password:$('p').value})});
+    const d=await r.json();if(!r.ok)throw new Error(d.error);
+    T=sessionStorage.adminToken=d.token;start();
+  }catch(e){$('lerr').textContent=e.message}
+}
+function out(){sessionStorage.clear();T=null;$('app').style.display='none';$('loginView').style.display='block'}
+async function start(){
+  $('loginView').style.display='none';$('app').style.display='block';
+  [courses,students]=await Promise.all([api('/api/admin/courses'),api('/api/admin/students')]);
+  render();
+}
+function tab(t){cur=t;render()}
+function render(){
+  const enr=students.reduce((n,s)=>n+s.courses.length,0);
+  $('stats').innerHTML=`<div class="stat"><b>${students.length}</b><span>عدد الطلاب</span></div>
+   <div class="stat"><b>${courses.length}</b><span>عدد الكورسات</span></div>
+   <div class="stat"><b>${enr}</b><span>إجمالي الاشتراكات</span></div>`;
+  $('t-courses').classList.toggle('on',cur=='courses');$('t-students').classList.toggle('on',cur=='students');
+  $('main').innerHTML=cur=='courses'?coursesHTML():studentsHTML();
+}
+function coursesHTML(){
+  return `<div class="box"><h3>➕ إضافة كورس جديد</h3>
+   <div class="grid2"><input id="cTitle" placeholder="اسم الكورس">
+   <select id="cPlan"><option value="month">باقة الشهر</option><option value="term">باقة الترم</option><option value="year">باقة السنة</option></select>
+   <input id="cPrice" type="number" placeholder="السعر بالجنيه"><input id="cImg" placeholder="رابط الصورة (اختياري)" value="/dr2.jpg"></div>
+   <textarea id="cDesc" rows="2" placeholder="وصف مختصر"></textarea>
+   <div class="err" id="cErr"></div><button onclick="addCourse()">نشر الكورس</button></div>`
+  +courses.map(c=>`<div class="course">
+    <div class="ch" onclick="openId=${openId===c.id?'null':c.id};render()">
+      <div><b>${esc(c.title)}</b><span class="badge">${PLAN[c.plan]||''}</span><span class="badge">${+c.price} ج</span>
+      <span class="badge">🎬 ${c.videos.length} فيديو</span></div>
+      <button class="del" onclick="event.stopPropagation();delCourse(${c.id})">حذف الكورس</button></div>
+    ${openId===c.id?`<div class="vids">
+      ${c.videos.map(v=>`<div class="v"><div><b>${esc(v.title)}</b><br><a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.url)}</a></div>
+        <button class="del" onclick="delVideo(${c.id},${v.id})">حذف</button></div>`).join('')||'<p style="color:var(--muted)">لا توجد فيديوهات بعد.</p>'}
+      <div class="grid2" style="margin-top:12px"><input id="vt" placeholder="اسم الفيديو / الحصة"><input id="vu" placeholder="رابط الفيديو (YouTube أو غيره) https://..."></div>
+      <div class="err" id="vErr"></div><button style="background:var(--ok)" onclick="addVideo(${c.id})">+ إضافة الفيديو</button></div>`:''}
+  </div>`).join('');
+}
+function studentsHTML(){
+  const l=students.filter(s=>!q||[s.name,s.email,s.phone].join(' ').includes(q));
+  return `<div class="box"><input placeholder="ابحث بالاسم أو الإيميل أو الموبايل..." value="${esc(q)}" oninput="q=this.value;render();this.focus()">
+  <div class="tw"><table><tr><th>#</th><th>الاسم</th><th>الإيميل</th><th>الموبايل</th><th>تاريخ التسجيل</th><th>الكورسات</th></tr>
+  ${l.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.email)}</td><td dir="ltr">${esc(s.phone)}</td>
+   <td>${new Date(s.joined).toLocaleDateString('ar-EG')}</td>
+   <td>${s.courses.map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'—'}</td></tr>`).join('')||'<tr><td colspan="6" style="color:var(--muted)">لا يوجد طلاب.</td></tr>'}
+  </table></div></div>`;
+}
+async function reload(){courses=await api('/api/admin/courses');render()}
+async function addCourse(){
+  try{await api('/api/admin/courses',{method:'POST',body:{title:$('cTitle').value,plan:$('cPlan').value,price:$('cPrice').value,image:$('cImg').value,desc:$('cDesc').value}});await reload()}
+  catch(e){$('cErr').textContent=e.message}
+}
+async function delCourse(id){if(confirm('حذف الكورس وكل فيديوهاته واشتراكاته؟')){await api('/api/admin/courses/'+id,{method:'DELETE'});[courses,students]=await Promise.all([api('/api/admin/courses'),api('/api/admin/students')]);render()}}
+async function addVideo(id){
+  try{await api(`/api/admin/courses/${id}/videos`,{method:'POST',body:{title:$('vt').value,url:$('vu').value}});await reload()}
+  catch(e){$('vErr').textContent=e.message}
+}
+async function delVideo(id,vid){if(confirm('حذف الفيديو؟')){await api(`/api/admin/courses/${id}/videos/${vid}`,{method:'DELETE'});await reload()}}
+
+T?start().catch(out):out();
+</script>
+</body>
+</html>
