@@ -1,4 +1,3 @@
-// باك اند بسيط: Express + ملف JSON كقاعدة بيانات
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -16,14 +15,14 @@ app.use(express.static(__dirname));
 
 const seed = {
   courses: [
-    { id: 1, title: 'أساسيات البرمجة - شهري', plan: 'month', price: 150, desc: 'مقدمة في التفكير البرمجي والخوارزميات ولغة Python.' },
-    { id: 2, title: 'HTML و CSS من الصفر - شهري', plan: 'month', price: 150, desc: 'ابني أول صفحات ويب متجاوبة.' },
-    { id: 3, title: 'JavaScript للمبتدئين - شهري', plan: 'month', price: 180, desc: 'اتعلم الجافاسكريبت وتفاعل الصفحات.' },
-    { id: 4, title: 'فرونت إند: HTML / CSS / JS - ترم', plan: 'term', price: 600, desc: 'ابني مواقعك من الصفر لحد مشروع كامل.' },
-    { id: 5, title: 'باك إند: Node.js وقواعد البيانات - ترم', plan: 'term', price: 650, desc: 'السيرفر وال API وقواعد البيانات.' },
-    { id: 6, title: 'برمجة Python وحل المشكلات - ترم', plan: 'term', price: 550, desc: 'من الأساسيات لحد الدوال والكائنات ومشاريع صغيرة.' },
-    { id: 7, title: 'منهج البرمجة الكامل - سنة', plan: 'year', price: 1500, desc: 'فرونت إند + باك إند + مشروع تخرج.' },
-    { id: 8, title: 'مطوّر ويب شامل (Full Stack) - سنة', plan: 'year', price: 1800, desc: 'من HTML لحد موقع كامل بقاعدة بيانات ومتابعة مستمرة.' }
+    // ===== باقة الشهر (150 جنيه) =====
+    { id: 1, title: 'كورس الشهر - اساسيات البرمجة', plan: 'month', price: 150, image: 'dr1.jpg', desc: 'اشتراك شهري شامل شرح اساسيات البرمجة والتفكير المنطقي خطوة بخطوة.' },
+    { id: 2, title: 'كورس الشهر - تطوير الويب', plan: 'month', price: 150, image: 'dr1.jpg', desc: 'اشتراك شهري لتعلم تصميم وبناء صفحات الويب التفاعلية من الصفر.' },
+    // ===== باقة الترم (450 جنيه) =====
+    { id: 3, title: 'كورس الترم - المنهج المتكامل', plan: 'term', price: 450, image: 'dr2.jpg', desc: 'اشتراك الترم الكامل يشمل جميع المحاضرات والتطبيقات العملية والامتحانات.' },
+    { id: 4, title: 'كورس الترم - برمجة وتطبيقات', plan: 'term', price: 450, image: 'dr2.jpg', desc: 'تغطية شاملة لمحتوى الترم بالكامل مع متابعة مستمرة ومراجعات نهائية.' },
+    // ===== باقة السنة (950 جنيه) =====
+    { id: 5, title: 'كورس السنة - الباقة الذهبية الشاملة', plan: 'year', price: 950, image: 'dr1.jpg', desc: 'اشتراك العام الدراسي بالكامل + المراجعات النهائية + مشاريع التخرج ومتابعة خاصة.' }
   ],
   students: [], enrollments: []
 };
@@ -83,12 +82,13 @@ app.get('/api/my-courses', auth, (req, res) => {
   res.json(db.courses.filter(c => ids.includes(c.id)));
 });
 
+// لوحة الدكتور: إضافة كورس مع صورة
 app.post('/api/admin/courses', (req, res) => {
-  if (req.headers['x-admin-password'] !== ADMIN_PASSWORD) return res.status(403).json({ error: 'غير مسموح' });
-  const { title, plan, price, desc } = req.body;
+  if (req.headers['x-admin-password'] !== ADMIN_PASSWORD) return res.status(403).json({ error: 'باسورد الأدمن غلط' });
+  const { title, plan, price, desc, image } = req.body;
   if (!title || !['month', 'term', 'year'].includes(plan)) return res.status(400).json({ error: 'بيانات غلط' });
   const db = load();
-  const c = { id: Date.now(), title, plan, price: +price || 0, desc: desc || '' };
+  const c = { id: Date.now(), title, plan, price: +price || 0, desc: desc || '', image: image || 'dr1.jpg' };
   db.courses.push(c); save(db); res.json(c);
 });
 
