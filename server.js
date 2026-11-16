@@ -12,6 +12,10 @@ const SECRET = process.env.SECRET || crypto.createHash('sha256').update('s:' + A
 app.use(express.json());
 // حماية: ممنوع تحميل db.json أو أي ملف كود من الرابط
 app.use((req, res, next) => /\.(json|js|md)$/i.test(req.path) ? res.status(404).end() : next());
+// الصور: مسارات صريحة عشان Vercel يضمّها مع المشروع
+const nf = res => e => { if (e && !res.headersSent) res.status(404).end(); };
+app.get('/dr1.jpg', (req, res) => res.sendFile(path.join(__dirname, 'dr1.jpg'), nf(res)));
+app.get('/dr2.jpg', (req, res) => res.sendFile(path.join(__dirname, 'dr2.jpg'), nf(res)));
 app.use(express.static(__dirname, { index: false }));
 
 const img = '/dr2.jpg';
@@ -165,4 +169,5 @@ app.get('/api/admin/students', adminAuth, (req, res) => {
 });
 
 if (!process.env.VERCEL) app.listen(process.env.PORT || 3000, () => console.log('http://localhost:3000  |  admin: /admin'));
+module.exports = app;ORT || 3000, () => console.log('http://localhost:3000  |  admin: /admin'));
 module.exports = app;
