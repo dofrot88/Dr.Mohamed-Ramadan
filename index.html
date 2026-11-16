@@ -25,9 +25,7 @@ main{margin-right:235px;flex:1;min-width:0}
 .menu{display:none;background:none;border:0;color:#fff;font-size:1.5rem;cursor:pointer}
 .wrap{padding:24px;max-width:1200px;margin:0 auto}
 
-/* الواجهة الأساسية (Hero Section) بالصورة الرئيسية */
 .hero{background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);border:1px solid var(--line);border-radius:20px;padding:32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:30px;position:relative;overflow:hidden;box-shadow:0 15px 35px rgba(0,0,0,.35)}
-.hero::before{content:'';position:absolute;top:-50%;left:-10%;width:350px;height:350px;background:radial-gradient(circle,rgba(14,165,233,.15),transparent 70%);pointer-events:none}
 .hero-text{flex:1;z-index:2}
 .hero-text .tag{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);padding:5px 14px;border-radius:20px;font-size:.82rem;font-weight:700;display:inline-block;margin-bottom:14px}
 .hero-text h1{font-size:2rem;margin-bottom:12px;line-height:1.35;color:#fff}
@@ -38,34 +36,30 @@ main{margin-right:235px;flex:1;min-width:0}
 .hero-main-img .caption{position:absolute;bottom:-12px;right:50%;transform:translateX(50%);background:var(--side);border:1px solid var(--gold);color:#fff;padding:4px 16px;border-radius:20px;font-size:.82rem;font-weight:700;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.4)}
 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;transition:.2s}
-.stat:hover{border-color:var(--accent)}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center}
 .stat b{display:block;font-size:1.9rem;margin-bottom:4px}.stat span{color:var(--muted);font-size:.88rem}
 
 .tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
 .tabs button{background:var(--card);color:var(--text);border:1px solid var(--line);padding:9px 20px;border-radius:20px}
 .tabs button.on{background:var(--btn);border-color:var(--btn)}
 
-/* كروت الكورسات */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
-.card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
+.card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);display:flex;flex-direction:column;transition:transform .2s}
 .card:hover{transform:translateY(-4px);border-color:var(--accent)}
 .thumb-wrap{position:relative;height:200px;background:#1e293b;overflow:hidden}
-.thumb-wrap img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .3s}
-.card:hover .thumb-wrap img{transform:scale(1.05)}
-.plan-tag{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.88);backdrop-filter:blur(4px);color:var(--gold);border:1px solid var(--gold);padding:3px 12px;border-radius:20px;font-size:.78rem;font-weight:700}
-.price-tag{position:absolute;bottom:12px;left:12px;background:var(--ok);color:#fff;padding:4px 12px;border-radius:8px;font-weight:800;font-size:.95rem;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.thumb-wrap img{width:100%;height:100%;object-fit:cover;object-position:top}
+.plan-tag{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.88);color:var(--gold);border:1px solid var(--gold);padding:3px 12px;border-radius:20px;font-size:.78rem;font-weight:700}
+.price-tag{position:absolute;bottom:12px;left:12px;background:var(--ok);color:#fff;padding:4px 12px;border-radius:8px;font-weight:800;font-size:.95rem}
 .card-body{padding:16px;flex:1;display:flex;flex-direction:column}
 .card h4{font-size:1.05rem;margin-bottom:8px;color:#fff}
 .card p{color:var(--muted);font-size:.85rem;line-height:1.5;margin-bottom:16px;flex:1}
-button{background:var(--btn);color:#fff;border:0;padding:11px 18px;border-radius:8px;cursor:pointer;font:inherit;font-weight:600;transition:.2s}
-button:hover{opacity:.9}
+button{background:var(--btn);color:#fff;border:0;padding:11px 18px;border-radius:8px;cursor:pointer;font:inherit;font-weight:600}
 .card button{width:100%}
 button.sec{background:transparent;border:1px solid var(--line);padding:8px 14px}
 button:disabled{background:var(--ok);cursor:default}
 
 dialog{border:1px solid var(--line);border-radius:16px;padding:24px;width:min(420px,92vw);background:var(--card);color:var(--text);margin:auto}
-dialog::backdrop{background:rgba(0,0,0,.75);backdrop-filter:blur(3px)}
+dialog::backdrop{background:rgba(0,0,0,.75)}
 input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
 .err{color:#f87171;font-size:.85rem;min-height:20px;margin-top:4px}
 
@@ -82,7 +76,7 @@ input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8
 <body>
 <aside id="side">
   <div class="brand">
-    <img src="dr2.jpg" alt="د. محمد رمضان">
+    <img src="/dr2.jpg" alt="د. محمد رمضان">
     <h2>د. محمد رمضان</h2>
     <span>المنصة التعليمية الرسمية</span>
   </div>
@@ -103,7 +97,6 @@ input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8
   <div class="wrap" id="view"></div>
 </main>
 
-<!-- نافذة تسجيل الدخول / حساب جديد -->
 <dialog id="dlg">
   <h3 id="dt" style="margin-bottom:12px"></h3>
   <input class="f" id="name" placeholder="الاسم بالكامل">
@@ -115,19 +108,18 @@ input.f,select.f,textarea.f{width:100%;padding:11px;margin:7px 0;border-radius:8
   <button class="sec" onclick="dlg.close()" style="width:100%;margin-top:8px">إلغاء</button>
 </dialog>
 
-<!-- نافذة لوحة تحكم الدكتور لإضافة كورس -->
 <dialog id="adminDlg">
   <h3 style="margin-bottom:10px;color:var(--gold)">➕ إضافة كورس جديد للمنصة</h3>
   <input class="f" id="admPass" type="password" placeholder="باسورد الأدمن (الافتراضي: admin123)">
-  <input class="f" id="cTitle" placeholder="اسم الكورس (مثال: كورس المراجعة النهائية)">
+  <input class="f" id="cTitle" placeholder="اسم الكورس">
   <select class="f" id="cPlan">
     <option value="month">باقة الشهر (150 ج)</option>
     <option value="term">باقة الترم (450 ج)</option>
     <option value="year">باقة السنة (950 ج)</option>
   </select>
-  <input class="f" id="cPrice" type="number" placeholder="السعر بالجنيه (مثال: 150)">
-  <input class="f" id="cImg" placeholder="اسم الصورة أو رابطها" value="dr2.jpg">
-  <textarea class="f" id="cDesc" rows="3" placeholder="وصف مختصر لمحتوى الكورس..."></textarea>
+  <input class="f" id="cPrice" type="number" placeholder="السعر بالجنيه">
+  <input class="f" id="cImg" placeholder="رابط الصورة" value="/dr2.jpg">
+  <textarea class="f" id="cDesc" rows="3" placeholder="وصف مختصر..."></textarea>
   <div class="err" id="admErr"></div>
   <button onclick="addCourse()" style="width:100%;background:var(--ok)">نشر الكورس الآن</button>
   <button class="sec" onclick="adminDlg.close()" style="width:100%;margin-top:8px">إغلاق</button>
@@ -157,10 +149,10 @@ async function load(){
 
 function card(c){
   const on=mine.includes(c.id);
-  const img=c.image||'dr2.jpg';
+  const img=c.image||'/dr2.jpg';
   return `<div class="card">
     <div class="thumb-wrap">
-      <img src="${img}" onerror="this.src='dr2.jpg'" alt="${c.title}">
+      <img src="${img}" onerror="this.src='/dr2.jpg'" alt="${c.title}">
       <span class="plan-tag">${BADGE[c.plan]||c.plan}</span>
       <span class="price-tag">${c.price} جنيه</span>
     </div>
@@ -191,7 +183,7 @@ function render(){
         </div>
       </div>
       <div class="hero-main-img">
-        <img src="dr2.jpg" alt="د. محمد رمضان">
+        <img src="/dr2.jpg" alt="د. محمد رمضان">
         <div class="caption">د. محمد رمضان</div>
       </div>
     </div>
@@ -258,3 +250,4 @@ load();
 </script>
 </body>
 </html>
+
