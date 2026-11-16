@@ -67,6 +67,11 @@ input.f{width:100%;padding:11px;margin:7px 0;border-radius:8px;border:1px solid 
 .player iframe{width:100%;height:100%;border:0}
 .vl{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;max-height:480px;overflow:auto}
 .vi{padding:11px;border-radius:8px;cursor:pointer;font-size:.9rem}.vi:hover,.vi.on{background:var(--btn)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.box h3{color:var(--gold);margin-bottom:10px;font-size:1rem}.mu{color:var(--muted)}.wv{padding:5px 0;font-size:.9rem}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:10px}.info div{background:var(--bg);border-radius:8px;padding:10px;font-size:.9rem}.info small{display:block;color:var(--muted);margin-bottom:2px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:9px;text-align:right;border-bottom:1px solid var(--line)}th{color:var(--muted)}
+@media(max-width:600px){.info{grid-template-columns:1fr}}
 @media(max-width:850px){aside{transform:translateX(100%);transition:.25s}aside.open{transform:none}main{margin-right:0}.menu{display:block}.hero{flex-direction:column-reverse;text-align:center;padding:24px 18px}.hero-btns{justify-content:center}.hero-main-img img{width:190px;height:240px}.stats,.cv{grid-template-columns:1fr}}
 </style>
 </head>
@@ -83,7 +88,7 @@ input.f{width:100%;padding:11px;margin:7px 0;border-radius:8px;border:1px solid 
   <div class="top">
     <button class="menu" onclick="side.classList.toggle('open')">☰</button>
     <h3 id="title">الرئيسية</h3>
-    <input id="q" placeholder="ابحث عن كورس..." oninput="if(view=='home'||view=='course')view='all';render()">
+    <input id="q" placeholder="ابحث عن كورس..." oninput="if(view=='home'||view=='course'||view=='account')view='all';render()">
     <div class="u" id="user"></div>
   </div>
   <div class="wrap" id="view"></div>
@@ -94,6 +99,7 @@ input.f{width:100%;padding:11px;margin:7px 0;border-radius:8px;border:1px solid 
   <div class="notice" id="note" style="display:none"></div>
   <input class="f" id="name" placeholder="الاسم بالكامل">
   <input class="f" id="phone" placeholder="رقم الموبايل (واتساب)">
+  <input class="f" id="pphone" placeholder="رقم ولي الأمر (مطلوب)">
   <input class="f" id="email" type="email" placeholder="البريد الإلكتروني">
   <input class="f" id="pass" type="password" placeholder="كلمة المرور (6 حروف على الأقل)">
   <div class="err" id="err"></div>
@@ -165,12 +171,13 @@ function courseView(){
 
 function render(){
   const q=$('q').value.trim();
-  $('title').textContent={home:'الرئيسية',all:'جميع الكورسات',mine:'كورساتي',course:'الكورس'}[view];
+  $('title').textContent={home:'الرئيسية',all:'جميع الكورسات',mine:'كورساتي',course:'الكورس',account:'حسابي'}[view];
   document.querySelectorAll('aside a[data-v]').forEach(a=>a.classList.toggle('on',a.dataset.v==view));
   let list=courses.filter(c=>(plan=='all'||c.plan==plan)&&(!q||c.title.includes(q)||c.desc.includes(q)));
   if(view=='mine')list=list.filter(c=>mine.includes(c.id));
   let h='';
   if(view=='course')h=courseView();
+  else if(view=='account')h=accountView();
   else if(view=='home'){
     h=`<div class="hero"><div class="hero-text"><span class="tag">✨ المنصة التعليمية الأولى للتفوق والتميز</span>
     <h1>أهلاً بك في منصة د. محمد رمضان</h1>
@@ -193,12 +200,12 @@ document.querySelectorAll('aside a[data-v]').forEach(a=>a.onclick=()=>{
   if(a.dataset.v=='mine'&&!token)return needLogin('سجّل دخولك الأول عشان تشوف كورساتك');
   view=a.dataset.v;plan='all';side.classList.remove('open');render();
 });
-$('acc').onclick=()=>token?alert('الاسم: '+localStorage.name):needLogin('سجّل دخولك الأول عشان تشوف حسابك');
+$('acc').onclick=()=>token?openAccount():needLogin('سجّل دخولك الأول عشان تشوف حسابك');
 
 function openAuth(m,note){
   mode=m;
   $('dt').textContent=m=='login'?'تسجيل الدخول':'إنشاء حساب طالب جديد';
-  $('name').style.display=$('phone').style.display=m=='login'?'none':'block';
+  $('name').style.display=$('phone').style.display=$('pphone').style.display=m=='login'?'none':'block';
   $('sw').textContent=m=='login'?'معنديش حساب؟ سجّل حساب جديد':'عندي حساب؟ سجّل دخول';
   $('note').style.display=note?'block':'none';$('note').textContent=note||'';
   $('err').textContent='';dlg.showModal();
@@ -207,7 +214,7 @@ function switchMode(){openAuth(mode=='login'?'register':'login',$('note').textCo
 
 async function submitAuth(){
   try{
-    const d=await api('/api/'+mode,{method:'POST',body:{email:$('email').value,password:$('pass').value,name:$('name').value,phone:$('phone').value}});
+    const d=await api('/api/'+mode,{method:'POST',body:{email:$('email').value,password:$('pass').value,name:$('name').value,phone:$('phone').value,parentPhone:$('pphone').value}});
     token=localStorage.token=d.token;localStorage.name=d.name;dlg.close();load();
   }catch(e){$('err').textContent=e.message}
 }
@@ -220,10 +227,28 @@ async function enroll(id){
 }
 async function openCourse(id){
   if(!token)return needLogin('سجّل دخولك الأول عشان تدخل الكورس');
-  try{curC=courses.find(c=>c.id==id);vids=await api('/api/courses/'+id+'/videos');curV=vids[0]||null;view='course';render()}
+  try{curC=courses.find(c=>c.id==id);vids=await api('/api/courses/'+id+'/videos');curV=vids[0]||null;view='course';render();mark()}
   catch(e){alert(e.message)}
 }
-function playV(id){curV=vids.find(v=>v.id==id);render()}
+function playV(id){curV=vids.find(v=>v.id==id);render();mark()}
+
+let me=null;
+async function openAccount(){
+  try{me=await api('/api/me');view='account';side.classList.remove('open');render()}
+  catch(e){alert(e.message)}
+}
+function accountView(){
+  const ex=me.grades.filter(x=>x.type=='exam'),hw=me.grades.filter(x=>x.type=='homework');
+  const tbl=(l,t)=>`<div class="box"><h3>${t}</h3>${l.length?`<div class="tw"><table><tr><th>الاسم</th><th>الكورس</th><th>الدرجة</th><th>النسبة</th></tr>${l.map(x=>`<tr><td>${esc(x.title)}</td><td>${esc(x.course)}</td><td>${x.score} / ${x.max}</td><td>${Math.round(x.score/x.max*100)}%</td></tr>`).join('')}</table></div>`:'<p class="mu">لا توجد نتائج بعد.</p>'}</div>`;
+  return `<div class="box"><h3>👤 بيانات حسابي</h3><div class="info">
+    <div><small>الاسم</small>${esc(me.name)}</div><div><small>الإيميل</small>${esc(me.email)}</div>
+    <div><small>موبايل الطالب</small><span dir="ltr">${esc(me.phone)||'—'}</span></div>
+    <div><small>رقم ولي الأمر 🔒</small><span dir="ltr">${esc(me.parentPhone)||'—'}</span></div></div>
+    <p class="mu" style="margin-top:8px;font-size:.82rem">رقم ولي الأمر مسجّل ولا يمكن تعديله. لو محتاج تغييره تواصل مع الإدارة.</p></div>
+  <div class="box"><h3>🎬 متابعة الفيديوهات</h3>${me.courses.map(c=>{const w=c.videos.filter(v=>v.watched).length;return `<div style="margin-bottom:14px"><b>${esc(c.title)}</b> <span class="mu">(شاهدت ${w} من ${c.videos.length})</span>${c.videos.map(v=>`<div class="wv">${v.watched?'✅ تمت المشاهدة':'⬜ لم تُشاهد'} — ${esc(v.title)}</div>`).join('')}</div>`}).join('')||'<p class="mu">لست مشتركًا في أي كورس.</p>'}</div>`
+  +tbl(ex,'📝 نتائج الامتحانات')+tbl(hw,'📘 نتائج الواجبات');
+}
+const mark=()=>{if(curV&&curC)api('/api/watch',{method:'POST',body:{courseId:curC.id,videoId:curV.id}}).catch(()=>{})};
 
 load();
 </script>
