@@ -11,18 +11,16 @@ const DB = process.env.VERCEL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 
 app.use(express.json());
-app.use(express.static(__dirname));
+// قراءة الملفات الثابتة والصور من مجلد public
+app.use(express.static(path.join(__dirname, 'public')));
 
 const seed = {
   courses: [
-    // ===== باقة الشهر (150 جنيه) =====
-    { id: 1, title: 'كورس الشهر - اساسيات البرمجة', plan: 'month', price: 150, image: 'dr1.jpg', desc: 'اشتراك شهري شامل شرح اساسيات البرمجة والتفكير المنطقي خطوة بخطوة.' },
-    { id: 2, title: 'كورس الشهر - تطوير الويب', plan: 'month', price: 150, image: 'dr1.jpg', desc: 'اشتراك شهري لتعلم تصميم وبناء صفحات الويب التفاعلية من الصفر.' },
-    // ===== باقة الترم (450 جنيه) =====
+    { id: 1, title: 'كورس الشهر - اساسيات البرمجة', plan: 'month', price: 150, image: 'dr2.jpg', desc: 'اشتراك شهري شامل شرح اساسيات البرمجة والتفكير المنطقي خطوة بخطوة.' },
+    { id: 2, title: 'كورس الشهر - تطوير الويب', plan: 'month', price: 150, image: 'dr2.jpg', desc: 'اشتراك شهري لتعلم تصميم وبناء صفحات الويب التفاعلية من الصفر.' },
     { id: 3, title: 'كورس الترم - المنهج المتكامل', plan: 'term', price: 450, image: 'dr2.jpg', desc: 'اشتراك الترم الكامل يشمل جميع المحاضرات والتطبيقات العملية والامتحانات.' },
     { id: 4, title: 'كورس الترم - برمجة وتطبيقات', plan: 'term', price: 450, image: 'dr2.jpg', desc: 'تغطية شاملة لمحتوى الترم بالكامل مع متابعة مستمرة ومراجعات نهائية.' },
-    // ===== باقة السنة (950 جنيه) =====
-    { id: 5, title: 'كورس السنة - الباقة الذهبية الشاملة', plan: 'year', price: 950, image: 'dr1.jpg', desc: 'اشتراك العام الدراسي بالكامل + المراجعات النهائية + مشاريع التخرج ومتابعة خاصة.' }
+    { id: 5, title: 'كورس السنة - الباقة الذهبية الشاملة', plan: 'year', price: 950, image: 'dr2.jpg', desc: 'اشتراك العام الدراسي بالكامل + المراجعات النهائية + مشاريع التخرج ومتابعة خاصة.' }
   ],
   students: [], enrollments: []
 };
@@ -39,7 +37,7 @@ const auth = (req, res, next) => {
 const hash = p => crypto.createHash('sha256').update(p).digest('hex');
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/api/courses', (req, res) => {
@@ -82,13 +80,12 @@ app.get('/api/my-courses', auth, (req, res) => {
   res.json(db.courses.filter(c => ids.includes(c.id)));
 });
 
-// لوحة الدكتور: إضافة كورس مع صورة
 app.post('/api/admin/courses', (req, res) => {
   if (req.headers['x-admin-password'] !== ADMIN_PASSWORD) return res.status(403).json({ error: 'باسورد الأدمن غلط' });
   const { title, plan, price, desc, image } = req.body;
   if (!title || !['month', 'term', 'year'].includes(plan)) return res.status(400).json({ error: 'بيانات غلط' });
   const db = load();
-  const c = { id: Date.now(), title, plan, price: +price || 0, desc: desc || '', image: image || 'dr1.jpg' };
+  const c = { id: Date.now(), title, plan, price: +price || 0, desc: desc || '', image: image || 'dr2.jpg' };
   db.courses.push(c); save(db); res.json(c);
 });
 
