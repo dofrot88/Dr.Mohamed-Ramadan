@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>منصة د. محمد رمضان</title>
+<style>
+:root{--bg:#0b1220;--card:#111a2e;--line:#0e7490;--text:#e8eefc;--muted:#8fa0c0;--side:#1a8cff;--top:#6cc25a;--btn:#1a6bff;--ok:#22c55e}
+*{box-sizing:border-box;margin:0}
+body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+aside{width:210px;background:var(--side);padding:18px 12px;position:fixed;top:0;bottom:0;right:0;z-index:5}
+.brand{font-size:1.3rem;font-weight:800;text-align:center;margin-bottom:24px;color:#fff}
+aside a{display:block;padding:11px 14px;border-radius:8px;color:#fff;cursor:pointer;margin-bottom:6px;font-size:.92rem}
+aside a.on,aside a:hover{background:#fff;color:var(--side);font-weight:700}
+main{margin-right:210px;flex:1;min-width:0}
+.top{background:var(--top);padding:12px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:4}
+.top h3{color:#fff}.top input{flex:1;max-width:420px;margin:0 auto;padding:8px 14px;border-radius:8px;border:0;font:inherit}
+.top .u{display:flex;gap:8px;align-items:center;color:#fff;font-size:.9rem}
+.menu{display:none;background:none;border:0;color:#fff;font-size:1.4rem;cursor:pointer}
+.wrap{padding:20px}
+.banner{border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:18px;background:var(--card)}
+.banner small{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.stat{background:var(--card);border-radius:12px;padding:18px;text-align:center}
+.stat b{display:block;font-size:1.8rem;margin-bottom:4px}.stat span{color:var(--muted);font-size:.85rem}
+.row{display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:22px}
+.box{background:var(--card);border-radius:12px;padding:18px}
+.ring{width:110px;height:110px;border-radius:50%;margin:8px auto;display:grid;place-items:center;font-weight:700}
+.ring i{width:84px;height:84px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-style:normal;color:var(--ok)}
+.bars{display:flex;gap:26px;align-items:flex-end;height:130px;justify-content:center;margin-top:12px}
+.bars div{width:44px;background:var(--ok);border-radius:6px 6px 0 0;text-align:center;font-size:.8rem;position:relative}
+.bars em{position:absolute;bottom:-22px;right:0;left:0;color:var(--muted);font-style:normal}
+h2{font-size:1.05rem;margin:6px 0 14px}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tabs button{background:var(--card);color:var(--text);border:1px solid var(--line)}
+.tabs button.on{background:var(--btn);border-color:var(--btn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--card)}
+.thumb{height:150px;border-radius:8px;display:grid;place-items:center;font-size:1.5rem;font-weight:800;color:#fff;text-align:center;padding:10px}
+.card h4{margin:10px 2px 4px;font-size:.95rem}.card p{color:var(--muted);font-size:.8rem;margin:0 2px 10px;min-height:34px}
+.meta{display:flex;justify-content:space-between;margin:0 2px 10px;font-size:.85rem}
+.badge{background:#f59e0b;color:#000;padding:1px 10px;border-radius:20px;font-size:.75rem}
+button{background:var(--btn);color:#fff;border:0;padding:10px 16px;border-radius:7px;cursor:pointer;font:inherit}
+.card button{width:100%}button.sec{background:transparent;border:1px solid #fff8;padding:6px 12px}
+button:disabled{background:var(--ok)}
+dialog{border:1px solid var(--line);border-radius:14px;padding:24px;width:min(380px,92vw);background:var(--card);color:var(--text);margin:auto}
+dialog::backdrop{background:#000a}
+input.f{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #fff3;background:var(--bg);color:var(--text);font:inherit}
+.err{color:#f87171;font-size:.85rem;min-height:18px}
+@media(max-width:800px){
+ aside{transform:translateX(100%);transition:.2s}aside.open{transform:none}
+ main{margin-right:0}.menu{display:block}.stats,.row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<aside id="side">
+  <div class="brand">💻 د. محمد رمضان</div>
+  <a data-v="home" class="on">🏠 الرئيسية</a>
+  <a data-v="all">📚 كل الكورسات</a>
+  <a data-v="mine">🎓 كورساتي</a>
+  <a id="acc">👤 حسابي</a>
+</aside>
+<main>
+  <div class="top">
+    <button class="menu" onclick="side.classList.toggle('open')">☰</button>
+    <h3 id="title">الرئيسية</h3>
+    <input id="q" placeholder="ابحث عن كورس..." oninput="render()">
+    <div class="u" id="user"></div>
+  </div>
+  <div class="wrap" id="view"></div>
+</main>
+
+<dialog id="dlg">
+  <h3 id="dt" style="margin-bottom:10px"></h3>
+  <input class="f" id="name" placeholder="الاسم">
+  <input class="f" id="phone" placeholder="رقم الموبايل">
+  <input class="f" id="email" type="email" placeholder="الإيميل">
+  <input class="f" id="pass" type="password" placeholder="الباسورد">
+  <div class="err" id="err"></div>
+  <button onclick="submitAuth()" style="width:100%">تأكيد</button>
+  <button class="sec" onclick="dlg.close()" style="width:100%;margin-top:8px">إلغاء</button>
+</dialog>
+
+<script>
+const $=id=>document.getElementById(id);
+const PLANS={all:'الكل',month:'شهري',term:'ترم',year:'سنة'};
+const GRAD={month:'linear-gradient(135deg,#7c3aed,#4f46e5)',term:'linear-gradient(135deg,#0891b2,#2563eb)',year:'linear-gradient(135deg,#ea580c,#db2777)'};
+let view='home',plan='all',mode='login',token=localStorage.token,courses=[],mine=[];
+
+async function api(url,opt={}){
+  opt.headers={'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})};
+  if(opt.body)opt.body=JSON.stringify(opt.body);
+  const r=await fetch(url,opt),d=await r.json();
+  if(!r.ok)throw new Error(d.error||'حصل خطأ');return d;
+}
+async function load(){
+  courses=await api('/api/courses');
+  mine=[];
+  if(token){try{mine=(await api('/api/my-courses')).map(c=>c.id)}catch{logout(true)}}
+  $('user').innerHTML=token?`<span>${localStorage.name}</span><button class="sec" onclick="logout()">خروج</button>`
+    :`<button class="sec" onclick="openAuth('login')">دخول</button><button class="sec" onclick="openAuth('register')">حساب جديد</button>`;
+  render();
+}
+function card(c){
+  const on=mine.includes(c.id);
+  return `<div class="card"><div class="thumb" style="background:${GRAD[c.plan]}">${c.title.split(' - ')[0]}</div>
+  <h4>${c.title}</h4><p>${c.desc}</p>
+  <div class="meta"><span class="badge">${PLANS[c.plan]}</span><b>${c.price} جنيه</b></div>
+  ${on?'<button disabled>✅ مشترك - الدخول للكورس</button>':`<button onclick="enroll(${c.id})">اشترك الآن</button>`}</div>`;
+}
+function render(){
+  const q=$('q').value.trim(),titles={home:'الرئيسية',all:'كل الكورسات',mine:'كورساتي'};
+  $('title').textContent=titles[view];
+  document.querySelectorAll('aside a[data-v]').forEach(a=>a.classList.toggle('on',a.dataset.v==view));
+  let list=courses.filter(c=>(plan=='all'||c.plan==plan)&&(!q||c.title.includes(q)));
+  if(view=='mine')list=list.filter(c=>mine.includes(c.id));
+  let h='';
+  if(view=='home'){
+    const pct=courses.length?Math.round(mine.length/courses.length*100):0;
+    const cnt=p=>courses.filter(c=>c.plan==p).length,mx=Math.max(1,cnt('month'),cnt('term'),cnt('year'));
+    h+=`<div class="banner"><b>👋 أهلاً بيك في منصة د. محمد رمضان</b><br><small>اشترك في كورس واتعلم برمجة فرونت إند وباك إند خطوة بخطوة.</small></div>
+    <div class="stats">
+      <div class="stat"><b style="color:var(--ok)">${mine.length}</b><span>كورسات حالية</span></div>
+      <div class="stat"><b style="color:#38bdf8">${courses.length}</b><span>كورسات متاحة</span></div>
+      <div class="stat"><b style="color:#f59e0b">${cnt('year')}</b><span>باقات سنوية</span></div>
+    </div>
+    <div class="row">
+      <div class="box" style="text-align:center"><b>نسبة اشتراكك</b>
+        <div class="ring" style="background:conic-gradient(var(--ok) ${pct*3.6}deg,#1e293b 0)"><i>${pct}%</i></div>
+        <small style="color:var(--muted)">من إجمالي الكورسات</small></div>
+      <div class="box"><b>الكورسات حسب الخطة</b><div class="bars">
+        ${['month','term','year'].map(p=>`<div style="height:${cnt(p)/mx*100}%;min-height:26px">${cnt(p)}<em>${PLANS[p]}</em></div>`).join('')}
+      </div></div>
+    </div><h2>أحدث الكورسات</h2><div class="grid">${courses.slice(0,6).map(card).join('')}</div>`;
+  }else{
+    h+=`<div class="tabs">${Object.entries(PLANS).map(([k,v])=>`<button class="${k==plan?'on':''}" onclick="plan='${k}';render()">${v}</button>`).join('')}</div>`;
+    h+=list.length?`<div class="grid">${list.map(card).join('')}</div>`:'<p style="color:var(--muted)">مفيش كورسات هنا.</p>';
+  }
+  $('view').innerHTML=h;
+}
+document.querySelectorAll('aside a[data-v]').forEach(a=>a.onclick=()=>{
+  if(a.dataset.v=='mine'&&!token)return openAuth('login');
+  view=a.dataset.v;plan='all';side.classList.remove('open');render()});
+$('acc').onclick=()=>token?alert('أهلاً '+localStorage.name):openAuth('login');
+
+function openAuth(m){
+  mode=m;$('dt').textContent=m=='login'?'تسجيل الدخول':'إنشاء حساب جديد';
+  $('name').style.display=$('phone').style.display=m=='login'?'none':'block';
+  $('err').textContent='';dlg.showModal();
+}
+async function submitAuth(){
+  try{
+    const d=await api('/api/'+mode,{method:'POST',body:{email:$('email').value,password:$('pass').value,name:$('name').value,phone:$('phone').value}});
+    token=localStorage.token=d.token;localStorage.name=d.name;dlg.close();load();
+  }catch(e){$('err').textContent=e.message}
+}
+function logout(s){localStorage.clear();token=null;mine=[];view='home';if(!s)load()}
+async function enroll(id){
+  if(!token)return openAuth('login');
+  try{await api('/api/enroll',{method:'POST',body:{courseId:id}});await load();alert('تم الاشتراك ✅')}
+  catch(e){alert(e.message)}
+}
+load();
+</script>
+</body>
+</html>
