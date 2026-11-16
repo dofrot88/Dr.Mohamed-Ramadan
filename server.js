@@ -1,4 +1,5 @@
 
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -13,284 +14,197 @@ const DB = process.env.VERCEL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 
 app.use(express.json());
+app.use(express.static(__dirname, { index: false }));
 
-// تقديم الصور والملفات الثابتة من مجلد المشروع
-app.use(express.static(__dirname, {
-  index: false
-}));
+let sessions = new Map();
 
-// قاعدة البيانات الافتراضية
-const seed = {
-  courses: [
-    {
-      id: 1,
-      title: 'كورس الشهر - اساسيات البرمجة',
-      plan: 'month',
-      price: 150,
-      image: '/dr2.jpg',
-      desc: 'اشتراك شهري شامل شرح اساسيات البرمجة والتفكير المنطقي خطوة بخطوة.'
-    },
-    {
-      id: 2,
-      title: 'كورس الشهر - تطوير الويب',
-      plan: 'month',
-      price: 150,
-      image: '/dr2.jpg',
-      desc: 'اشتراك شهري لتعلم تصميم وبناء صفحات الويب التفاعلية من الصفر.'
-    },
-    {
-      id: 3,
-      title: 'كورس الترم - المنهج المتكامل',
-      plan: 'term',
-      price: 450,
-      image: '/dr2.jpg',
-      desc: 'اشتراك الترم الكامل يشمل جميع المحاضرات والتطبيقات العملية والامتحانات.'
-    },
-    {
-      id: 4,
-      title: 'كورس الترم - برمجة وتطبيقات',
-      plan: 'term',
-      price: 450,
-      image: '/dr2.jpg',
-      desc: 'تغطية شاملة لمحتوى الترم بالكامل مع متابعة مستمرة ومراجعات نهائية.'
-    },
-    {
-      id: 5,
-      title: 'كورس السنة - الباقة الذهبية الشاملة',
-      plan: 'year',
-      price: 950,
-      image: '/dr2.jpg',
-      desc: 'اشتراك العام الدراسي بالكامل + المراجعات النهائية + مشاريع التخرج ومتابعة خاصة.'
+function readDB() {
+  try {
+    if (!fs.existsSync(DB)) {
+      const initialData = {
+        users: [],
+        courses: [
+          {
+            id: 'course1',
+            title: 'الكورس الأول',
+            description: 'كورس تعليمي شامل',
+            price: 500,
+            image: '/dr2.jpg'
+          },
+          {
+            id: 'course2',
+            title: 'الكورس الثاني',
+            description: 'شرح وتدريبات ومراجعة',
+            price: 400,
+            image: '/dr1.jpg'
+          }
+        ],
+        enrollments: []
+      };
+      fs.writeFileSync(DB, JSON.stringify(initialData, null, 2));
     }
-  ],
-  students: [],
-  enrollments: []
-};
-
-// تحميل قاعدة البيانات
-const load = () => {
-  if (!fs.existsSync(DB)) {
-    fs.writeFileSync(DB, JSON.stringify(seed, null, 2));
+    return JSON.parse(fs.readFileSync(DB, 'utf8'));
+  } catch (error) {
+    console.error('Database error:', error);
+    return { users: [], courses: [], enrollments: [] };
   }
+}
 
-  const data = JSON.parse(fs.readFileSync(DB, 'utf8'));
+function saveDB(data) {
+  fs.writeFileSync(DB, JSON.stringify(data, null, 2));
+}
 
-  if (!data.courses || data.courses.length === 0) {
-    data.courses = seed.courses;
-    fs.writeFileSync(DB, JSON.stringify(data, null, 2));
-  }
+function getUser(req) {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+  return sessions.get(token);
+}
 
-  return data;
-};
-
-// حفظ قاعدة البيانات
-const save = d => {
-  fs.writeFileSync(DB, JSON.stringify(d, null, 2));
-};
-
-// إدارة جلسات تسجيل الدخول
-const tokens = new Map();
-
-// التحقق من تسجيل الدخول
-const auth = (req, res, next) => {
-  const id = tokens.get(
-    (req.headers.authorization || '').replace('Bearer ', '')
-  );
-
-  if (!id) {
-    return res.status(401).json({
-      error: 'سجّل دخولك الأول'
-    });
-  }
-
-  req.studentId = id;
-  next();
-};
-
-// تشفير كلمات المرور
-const hash = p =>
-  crypto.createHash('sha256').update(p).digest('hex');
-
-// الصفحة الرئيسية
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// اختبار ظهور صورة الدكتور
 app.get('/image-check', (req, res) => {
-  const imagePath = path.join(__dirname, 'dr2.jpg');
-
-  if (fs.existsSync(imagePath)) {
-    return res.json({
-      success: true,
-      message: 'صورة الدكتور موجودة',
-      image: '/dr2.jpg'
-    });
-  }
-
-  res.status(404).json({
-    success: false,
-    message: 'لم يتم العثور على dr2.jpg'
+  res.json({
+    dr1: fs.existsSync(path.join(__dirname, 'dr1.jpg')),
+    dr2: fs.existsSync(path.join(__dirname, 'dr2.jpg'))
   });
 });
 
-// جميع الكورسات
 app.get('/api/courses', (req, res) => {
-  const { plan } = req.query;
-
-  res.json(
-    load().courses.filter(c => !plan || c.plan === plan)
-  );
+  const db = readDB();
+  res.json(db.courses);
 });
 
-// إنشاء حساب طالب
 app.post('/api/register', (req, res) => {
-  const { name, email, password, phone } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!name || !email || !password || password.length < 6) {
-    return res.status(400).json({
-      error: 'البيانات ناقصة (الباسورد 6 حروف على الأقل)'
-    });
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'يرجى إدخال جميع البيانات' });
   }
 
-  const db = load();
+  const db = readDB();
 
-  if (db.students.find(s => s.email === email)) {
-    return res.status(400).json({
-      error: 'الإيميل مستخدم'
-    });
+  if (db.users.some(user => user.email === email)) {
+    return res.status(409).json({ error: 'البريد الإلكتروني مسجل بالفعل' });
   }
 
-  const s = {
-    id: Date.now(),
+  const user = {
+    id: crypto.randomUUID(),
     name,
     email,
-    phone: phone || '',
-    password: hash(password)
+    password
   };
 
-  db.students.push(s);
-  save(db);
+  db.users.push(user);
+  saveDB(db);
 
-  const t = crypto.randomUUID();
-  tokens.set(t, s.id);
-
-  res.json({
-    token: t,
-    name
-  });
+  res.json({ message: 'تم إنشاء الحساب بنجاح' });
 });
 
-// تسجيل الدخول
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
+  const db = readDB();
 
-  const s = load().students.find(
-    x => x.email === email &&
-    x.password === hash(password || '')
+  const user = db.users.find(
+    item => item.email === email && item.password === password
   );
 
-  if (!s) {
-    return res.status(401).json({
-      error: 'بيانات غلط'
-    });
+  if (!user) {
+    return res.status(401).json({ error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
   }
 
-  const t = crypto.randomUUID();
-  tokens.set(t, s.id);
+  const token = crypto.randomUUID();
+  sessions.set(token, { id: user.id, name: user.name, email: user.email });
 
   res.json({
-    token: t,
-    name: s.name
+    token,
+    user: { id: user.id, name: user.name, email: user.email }
   });
 });
 
-// الاشتراك في كورس
-app.post('/api/enroll', auth, (req, res) => {
-  const db = load();
-  const courseId = +req.body.courseId;
+app.post('/api/enroll', (req, res) => {
+  const user = getUser(req);
 
-  if (!db.courses.find(c => c.id === courseId)) {
-    return res.status(404).json({
-      error: 'الكورس مش موجود'
-    });
+  if (!user) {
+    return res.status(401).json({ error: 'يجب تسجيل الدخول أولًا' });
   }
 
-  if (
-    db.enrollments.find(
-      e => e.studentId === req.studentId &&
-      e.courseId === courseId
-    )
-  ) {
-    return res.status(400).json({
-      error: 'أنت مشترك بالفعل'
-    });
+  const { courseId } = req.body;
+  const db = readDB();
+
+  const course = db.courses.find(item => item.id === courseId);
+
+  if (!course) {
+    return res.status(404).json({ error: 'الكورس غير موجود' });
+  }
+
+  const exists = db.enrollments.some(
+    item => item.userId === user.id && item.courseId === courseId
+  );
+
+  if (exists) {
+    return res.json({ message: 'أنت مشترك بالفعل في هذا الكورس' });
   }
 
   db.enrollments.push({
-    studentId: req.studentId,
-    courseId,
-    date: new Date().toISOString()
+    id: crypto.randomUUID(),
+    userId: user.id,
+    courseId
   });
 
-  save(db);
-
-  res.json({ ok: true });
+  saveDB(db);
+  res.json({ message: 'تم تسجيل طلب الاشتراك بنجاح' });
 });
 
-// كورسات الطالب
-app.get('/api/my-courses', auth, (req, res) => {
-  const db = load();
+app.get('/api/my-courses', (req, res) => {
+  const user = getUser(req);
+
+  if (!user) {
+    return res.status(401).json({ error: 'يجب تسجيل الدخول أولًا' });
+  }
+
+  const db = readDB();
 
   const ids = db.enrollments
-    .filter(e => e.studentId === req.studentId)
-    .map(e => e.courseId);
+    .filter(item => item.userId === user.id)
+    .map(item => item.courseId);
 
-  res.json(
-    db.courses.filter(c => ids.includes(c.id))
-  );
+  res.json(db.courses.filter(course => ids.includes(course.id)));
 });
 
-// إضافة كورس جديد
 app.post('/api/admin/courses', (req, res) => {
-  if (
-    req.headers['x-admin-password'] !== ADMIN_PASSWORD
-  ) {
-    return res.status(403).json({
-      error: 'باسورد الأدمن غلط'
-    });
+  const { password, title, description, price, image } = req.body;
+
+  if (password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'كلمة مرور الإدارة غير صحيحة' });
   }
 
-  const { title, plan, price, desc, image } = req.body;
-
-  if (!title || !['month', 'term', 'year'].includes(plan)) {
-    return res.status(400).json({
-      error: 'بيانات غلط'
-    });
+  if (!title) {
+    return res.status(400).json({ error: 'اكتب اسم الكورس' });
   }
 
-  const db = load();
+  const db = readDB();
 
-  const c = {
-    id: Date.now(),
+  const course = {
+    id: crypto.randomUUID(),
     title,
-    plan,
-    price: +price || 0,
-    desc: desc || '',
-    image: image || '/dr2.jpg'
+    description: description || '',
+    price: Number(price) || 0,
+    image: image === 'dr1.jpg' ? '/dr1.jpg' : '/dr2.jpg'
   };
 
-  db.courses.push(c);
-  save(db);
+  db.courses.push(course);
+  saveDB(db);
 
-  res.json(c);
+  res.json({ message: 'تمت إضافة الكورس بنجاح', course });
 });
 
-// تشغيل محلي
+module.exports = app;
+
 if (!process.env.VERCEL) {
-  app.listen(process.env.PORT || 3000, () => {
-    console.log('Server running on port 3000');
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
 }
-
-module.exports = app;
