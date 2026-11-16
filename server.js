@@ -11,8 +11,7 @@ const DB = process.env.VERCEL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 
 app.use(express.json());
-// قراءة الملفات الثابتة والصور من مجلد public مباشرة
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname)); // لخدمة الصور والملفات من المجلد الرئيسي مباشرة
 
 const seed = {
   courses: [
@@ -35,6 +34,11 @@ const auth = (req, res, next) => {
   req.studentId = id; next();
 };
 const hash = p => crypto.createHash('sha256').update(p).digest('hex');
+
+// توجيه الصفحة الرئيسية لملف index.html بوضوح تام لمنع خطأ Cannot GET
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.get('/api/courses', (req, res) => {
   const { plan } = req.query;
@@ -70,7 +74,7 @@ app.post('/api/enroll', auth, (req, res) => {
   save(db); res.json({ ok: true });
 });
 
-app.get('/api/my-courses', auth, (res, req) => {
+app.get('/api/my-courses', auth, (req, res) => {
   const db = load();
   const ids = db.enrollments.filter(e => e.studentId === req.studentId).map(e => e.courseId);
   res.json(db.courses.filter(c => ids.includes(c.id)));
