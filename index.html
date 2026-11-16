@@ -2,614 +2,412 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>منصة د. محمد رمضان التعليمية</title>
-
-<style>
-:root{
---bg:#0b1220;--card:#111a2e;--line:#1e293b;
---accent:#0ea5e9;--text:#f1f5f9;--muted:#94a3b8;
---side:#0f172a;--btn:#2563eb;--ok:#10b981;--gold:#f59e0b
-}
-*{box-sizing:border-box;margin:0}
-body{
-font-family:'Segoe UI',Tahoma,Arial,sans-serif;
-background:var(--bg);color:var(--text);
-min-height:100vh;display:flex
-}
-aside{
-width:235px;background:var(--side);
-border-left:1px solid var(--line);
-padding:22px 14px;position:fixed;
-top:0;bottom:0;right:0;z-index:10;
-display:flex;flex-direction:column
-}
-.brand{
-text-align:center;margin-bottom:26px;
-padding-bottom:18px;border-bottom:1px solid var(--line)
-}
-.brand img{
-width:82px;height:82px;border-radius:50%;
-object-fit:cover;object-position:top;
-border:3px solid var(--gold);margin-bottom:10px;
-box-shadow:0 4px 15px rgba(245,158,11,.25)
-}
-.brand h2{font-size:1.15rem;color:#fff}
-.brand span{font-size:.78rem;color:var(--accent)}
-aside a{
-display:flex;align-items:center;gap:10px;
-padding:12px 14px;border-radius:10px;
-color:var(--muted);cursor:pointer;margin-bottom:6px;
-font-size:.92rem;transition:.2s
-}
-aside a.on,aside a:hover{
-background:var(--btn);color:#fff;font-weight:600
-}
-aside a.admin-link{
-margin-top:auto;border:1px dashed var(--gold);
-color:var(--gold)
-}
-aside a.admin-link:hover{background:var(--gold);color:#000}
-
-main{margin-right:235px;flex:1;min-width:0}
-.top{
-background:rgba(15,23,42,.9);
-backdrop-filter:blur(8px);
-border-bottom:1px solid var(--line);
-padding:14px 24px;display:flex;
-align-items:center;gap:14px;
-position:sticky;top:0;z-index:9
-}
-.top h3{color:#fff;font-size:1.1rem}
-.top input{
-flex:1;max-width:400px;margin:0 auto;
-padding:9px 16px;border-radius:20px;
-border:1px solid var(--line);
-background:var(--bg);color:#fff;font:inherit
-}
-.top .u{display:flex;gap:8px;align-items:center;font-size:.9rem}
-.menu{
-display:none;background:none;border:0;
-color:#fff;font-size:1.5rem;cursor:pointer
-}
-.wrap{padding:24px;max-width:1200px;margin:0 auto}
-
-.hero{
-background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);
-border:1px solid var(--line);border-radius:20px;
-padding:32px;margin-bottom:28px;
-display:flex;align-items:center;
-justify-content:space-between;gap:30px;
-position:relative;overflow:hidden;
-box-shadow:0 15px 35px rgba(0,0,0,.35)
-}
-.hero-text{flex:1;z-index:2}
-.hero-text .tag{
-background:rgba(245,158,11,.15);color:var(--gold);
-border:1px solid rgba(245,158,11,.3);
-padding:5px 14px;border-radius:20px;
-font-size:.82rem;font-weight:700;
-display:inline-block;margin-bottom:14px
-}
-.hero-text h1{
-font-size:2rem;margin-bottom:12px;
-line-height:1.35;color:#fff
-}
-.hero-text p{
-color:var(--muted);font-size:1rem;
-margin-bottom:22px;max-width:560px;line-height:1.7
-}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.hero-main-img{z-index:2;flex-shrink:0;position:relative}
-.hero-main-img img{
-width:230px;height:290px;object-fit:cover;
-object-position:top;border-radius:18px;
-border:3px solid var(--gold);
-box-shadow:0 15px 35px rgba(0,0,0,.5);
-display:block
-}
-.hero-main-img .caption{
-position:absolute;bottom:-12px;right:50%;
-transform:translateX(50%);
-background:var(--side);border:1px solid var(--gold);
-color:#fff;padding:4px 16px;border-radius:20px;
-font-size:.82rem;font-weight:700;white-space:nowrap;
-box-shadow:0 4px 12px rgba(0,0,0,.4)
-}
-
-.stats{
-display:grid;grid-template-columns:repeat(3,1fr);
-gap:16px;margin-bottom:28px
-}
-.stat{
-background:var(--card);border:1px solid var(--line);
-border-radius:14px;padding:20px;text-align:center
-}
-.stat b{display:block;font-size:1.9rem;margin-bottom:4px}
-.stat span{color:var(--muted);font-size:.88rem}
-
-.tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-.tabs button{
-background:var(--card);color:var(--text);
-border:1px solid var(--line);padding:9px 20px;border-radius:20px
-}
-.tabs button.on{background:var(--btn);border-color:var(--btn)}
-
-.grid{
-display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-gap:20px
-}
-.card{
-border:1px solid var(--line);border-radius:14px;
-overflow:hidden;background:var(--card);
-display:flex;flex-direction:column;transition:transform .2s
-}
-.card:hover{transform:translateY(-4px);border-color:var(--accent)}
-.thumb-wrap{
-position:relative;height:200px;
-background:#1e293b;overflow:hidden
-}
-.thumb-wrap img{
-width:100%;height:100%;
-object-fit:cover;object-position:top
-}
-.plan-tag{
-position:absolute;top:12px;right:12px;
-background:rgba(15,23,42,.88);color:var(--gold);
-border:1px solid var(--gold);padding:3px 12px;
-border-radius:20px;font-size:.78rem;font-weight:700
-}
-.price-tag{
-position:absolute;bottom:12px;left:12px;
-background:var(--ok);color:#fff;padding:4px 12px;
-border-radius:8px;font-weight:800;font-size:.95rem
-}
-.card-body{
-padding:16px;flex:1;display:flex;flex-direction:column
-}
-.card h4{font-size:1.05rem;margin-bottom:8px;color:#fff}
-.card p{
-color:var(--muted);font-size:.85rem;
-line-height:1.5;margin-bottom:16px;flex:1
-}
-button{
-background:var(--btn);color:#fff;border:0;
-padding:11px 18px;border-radius:8px;
-cursor:pointer;font:inherit;font-weight:600
-}
-.card button{width:100%}
-button.sec{
-background:transparent;border:1px solid var(--line);
-padding:8px 14px
-}
-button:disabled{background:var(--ok);cursor:default}
-
-dialog{
-border:1px solid var(--line);border-radius:16px;
-padding:24px;width:min(420px,92vw);
-background:var(--card);color:var(--text);margin:auto
-}
-dialog::backdrop{background:rgba(0,0,0,.75)}
-input.f,select.f,textarea.f{
-width:100%;padding:11px;margin:7px 0;
-border-radius:8px;border:1px solid var(--line);
-background:var(--bg);color:var(--text);font:inherit
-}
-.err{color:#f87171;font-size:.85rem;min-height:20px;margin-top:4px}
-
-@media(max-width:850px){
-aside{transform:translateX(100%);transition:.25s}
-aside.open{transform:none}
-main{margin-right:0}
-.menu{display:block}
-.hero{flex-direction:column-reverse;text-align:center;padding:24px 18px}
-.hero-btns{justify-content:center}
-.hero-main-img img{width:190px;height:240px}
-.stats{grid-template-columns:1fr}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة د. محمد رمضان التعليمية</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Tahoma, Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
+    button, input { font: inherit; }
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 18px;
+      background: #087e8b;
+      color: white;
+    }
+    button:hover { opacity: .9; }
+    .layout { display: flex; min-height: 100vh; }
+    aside {
+      width: 250px;
+      background: #073b4c;
+      color: white;
+      padding: 25px 18px;
+      text-align: center;
+    }
+    .side-photo {
+      width: 125px;
+      height: 125px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid white;
+    }
+    aside h2 { font-size: 19px; }
+    aside p { color: #c9e5e9; }
+    nav { margin-top: 30px; display: grid; gap: 12px; }
+    nav button {
+      width: 100%;
+      background: #ffffff18;
+      text-align: right;
+    }
+    main { flex: 1; padding: 25px; min-width: 0; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+    .hero {
+      background: linear-gradient(120deg, #073b4c, #087e8b);
+      color: white;
+      border-radius: 18px;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hero img {
+      width: 210px;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 4px solid #ffffff;
+    }
+    .hero h1 { margin-top: 0; }
+    .section { margin-top: 30px; }
+    .courses {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+    .course {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 14px #0000000c;
+    }
+    .course img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #e6eef0;
+    }
+    .course-content { padding: 16px; }
+    .course h3 { margin-top: 0; }
+    .course p { color: #667085; }
+    .panel {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      margin-top: 20px;
+    }
+    .panel input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0 14px;
+      border: 1px solid #ccd5df;
+      border-radius: 8px;
+    }
+    .hidden { display: none !important; }
+    .message { margin-top: 12px; color: #087e8b; }
+    .danger { background: #b42318; }
+    footer {
+      text-align: center;
+      color: #777;
+      padding: 30px 0 10px;
+    }
+    @media (max-width: 700px) {
+      .layout { display: block; }
+      aside { width: 100%; }
+      nav { grid-template-columns: repeat(2, 1fr); }
+      main { padding: 15px; }
+      .hero img { width: 150px; height: 150px; }
+    }
+  </style>
 </head>
-
 <body>
 
-<aside id="side">
-  <div class="brand">
-    <img src="/dr2.jpg" alt="د. محمد رمضان">
+<div class="layout">
+
+  <aside>
+    <!-- الصورة الثانية في القائمة الجانبية -->
+    <img class="side-photo" src="/dr2.jpg" alt="د. محمد رمضان"
+         onerror="this.src='/dr1.jpg'">
+
     <h2>د. محمد رمضان</h2>
-    <span>المنصة التعليمية الرسمية</span>
-  </div>
+    <p>منصتك التعليمية</p>
 
-  <a data-v="home" class="on">🏠 الرئيسية</a>
-  <a data-v="all">📚 جميع الكورسات</a>
-  <a data-v="mine">🎓 كورساتي المشترك بها</a>
-  <a id="acc">👤 حسابي</a>
-  <a class="admin-link" onclick="openAdmin()">⚙️ إضافة كورس (للدكتور)</a>
-</aside>
+    <nav>
+      <button onclick="showSection('home')">الرئيسية</button>
+      <button onclick="showSection('courses')">الكورسات</button>
+      <button onclick="showSection('login')">تسجيل الدخول</button>
+      <button onclick="showSection('register')">إنشاء حساب</button>
+      <button onclick="showSection('myCourses')">كورساتي</button>
+      <button onclick="showSection('admin')">إدارة المنصة</button>
+    </nav>
+  </aside>
 
-<main>
-  <div class="top">
-    <button class="menu" onclick="side.classList.toggle('open')">☰</button>
-    <h3 id="title">الرئيسية</h3>
-    <input id="q" placeholder="ابحث عن كورس..." oninput="render()">
-    <div class="u" id="user"></div>
-  </div>
+  <main>
+    <header>
+      <strong>منصة د. محمد رمضان التعليمية</strong>
+      <span id="userStatus">زائر</span>
+    </header>
 
-  <div class="wrap" id="view"></div>
-</main>
+    <section id="home">
+      <div class="hero">
+        <div>
+          <h1>مرحبًا بك في منصتنا التعليمية</h1>
+          <p>تعلم بطريقة سهلة ومنظمة، وابدأ رحلتك نحو التفوق.</p>
+          <button onclick="showSection('courses')">استعرض الكورسات</button>
+        </div>
 
-<dialog id="dlg">
-  <h3 id="dt" style="margin-bottom:12px"></h3>
-  <input class="f" id="name" placeholder="الاسم بالكامل">
-  <input class="f" id="phone" placeholder="رقم الموبايل (واتساب)">
-  <input class="f" id="email" type="email" placeholder="البريد الإلكتروني">
-  <input class="f" id="pass" type="password" placeholder="كلمة المرور (6 حروف على الأقل)">
-  <div class="err" id="err"></div>
-  <button onclick="submitAuth()" style="width:100%">تأكيد</button>
-  <button class="sec" onclick="dlg.close()" style="width:100%;margin-top:8px">إلغاء</button>
-</dialog>
+        <!-- الصورة الأولى في الواجهة الرئيسية -->
+        <img src="/dr1.jpg" alt="د. محمد رمضان"
+             onerror="this.src='/dr2.jpg'">
+      </div>
 
-<dialog id="adminDlg">
-  <h3 style="margin-bottom:10px;color:var(--gold)">➕ إضافة كورس جديد للمنصة</h3>
-  <input class="f" id="admPass" type="password" placeholder="باسورد الأدمن (الافتراضي: admin123)">
-  <input class="f" id="cTitle" placeholder="اسم الكورس">
-  <select class="f" id="cPlan">
-    <option value="month">باقة الشهر (150 ج)</option>
-    <option value="term">باقة الترم (450 ج)</option>
-    <option value="year">باقة السنة (950 ج)</option>
-  </select>
-  <input class="f" id="cPrice" type="number" placeholder="السعر بالجنيه">
-  <input class="f" id="cImg" placeholder="رابط الصورة" value="/dr2.jpg">
-  <textarea class="f" id="cDesc" rows="3" placeholder="وصف مختصر..."></textarea>
-  <div class="err" id="admErr"></div>
-  <button onclick="addCourse()" style="width:100%;background:var(--ok)">نشر الكورس الآن</button>
-  <button class="sec" onclick="adminDlg.close()" style="width:100%;margin-top:8px">إغلاق</button>
-</dialog>
+      <div class="section">
+        <h2>الكورسات المتاحة</h2>
+        <div id="homeCourses" class="courses">جاري تحميل الكورسات...</div>
+      </div>
+    </section>
+
+    <section id="courses" class="hidden">
+      <h2>جميع الكورسات</h2>
+      <div id="allCourses" class="courses">جاري تحميل الكورسات...</div>
+    </section>
+
+    <section id="login" class="hidden">
+      <div class="panel">
+        <h2>تسجيل الدخول</h2>
+        <input id="loginEmail" type="email" placeholder="البريد الإلكتروني">
+        <input id="loginPassword" type="password" placeholder="كلمة المرور">
+        <button onclick="login()">دخول</button>
+        <div id="loginMessage" class="message"></div>
+      </div>
+    </section>
+
+    <section id="register" class="hidden">
+      <div class="panel">
+        <h2>إنشاء حساب جديد</h2>
+        <input id="registerName" placeholder="الاسم بالكامل">
+        <input id="registerEmail" type="email" placeholder="البريد الإلكتروني">
+        <input id="registerPassword" type="password" placeholder="كلمة المرور">
+        <button onclick="register()">إنشاء الحساب</button>
+        <div id="registerMessage" class="message"></div>
+      </div>
+    </section>
+
+    <section id="myCourses" class="hidden">
+      <h2>كورساتي</h2>
+      <div id="myCoursesList" class="courses"></div>
+    </section>
+
+    <section id="admin" class="hidden">
+      <div class="panel">
+        <h2>إضافة كورس جديد</h2>
+        <input id="adminPassword" type="password" placeholder="كلمة مرور الإدارة">
+        <input id="courseTitle" placeholder="اسم الكورس">
+        <input id="courseDescription" placeholder="وصف الكورس">
+        <input id="coursePrice" type="number" placeholder="السعر">
+        <input id="courseImage" placeholder="اسم الصورة: dr1.jpg أو dr2.jpg">
+        <button onclick="addCourse()">إضافة الكورس</button>
+        <div id="adminMessage" class="message"></div>
+      </div>
+    </section>
+
+    <footer>جميع الحقوق محفوظة © منصة د. محمد رمضان التعليمية</footer>
+  </main>
+</div>
 
 <script>
-const $=id=>document.getElementById(id);
+  let token = localStorage.getItem('token') || '';
+  let courses = [];
 
-const PLANS={
-all:'الكل',
-month:'اشتراك شهري (150 ج)',
-term:'اشتراك الترم (450 ج)',
-year:'اشتراك السنة (950 ج)'
-};
+  function showSection(id) {
+    document.querySelectorAll('main section').forEach(section => {
+      section.classList.add('hidden');
+    });
+    document.getElementById(id).classList.remove('hidden');
 
-const BADGE={
-month:'باقة الشهر',
-term:'باقة الترم',
-year:'باقة السنة'
-};
-
-let view='home',plan='all',mode='login';
-let token=localStorage.token,courses=[],mine=[];
-
-/* توحيد مسارات الصور */
-function imagePath(path){
-  if(!path)return '/dr2.jpg';
-
-  const value=String(path).trim();
-
-  if(!value)return '/dr2.jpg';
-
-  if(/^(https?:|data:|blob:)/i.test(value)){
-    return value;
+    if (id === 'myCourses') loadMyCourses();
+    if (id === 'courses' || id === 'home') loadCourses();
   }
 
-  if(value.startsWith('/')){
-    return value;
+  function updateUserStatus() {
+    const name = localStorage.getItem('userName');
+    document.getElementById('userStatus').textContent = name
+      ? 'مرحبًا، ' + name
+      : 'زائر';
   }
 
-  return '/' + value.replace(/^\.?\//,'');
-}
-
-/* الاتصال بالسيرفر */
-async function api(url,opt={}){
-  opt.headers={
-    'Content-Type':'application/json',
-    ...(token?{Authorization:'Bearer '+token}:{}),
-    ...(opt.headers||{})
-  };
-
-  if(opt.body)opt.body=JSON.stringify(opt.body);
-
-  const r=await fetch(url,opt);
-  const d=await r.json();
-
-  if(!r.ok)throw new Error(d.error||'حصل خطأ');
-
-  return d;
-}
-
-/* تحميل البيانات */
-async function load(){
-  try{
-    courses=await api('/api/courses');
-
-    mine=[];
-
-    if(token){
-      try{
-        mine=(await api('/api/my-courses')).map(c=>c.id);
-      }catch{
-        logout(true);
-      }
-    }
-
-    $('user').innerHTML=token
-      ?`<span>أهلاً، <b>${localStorage.name||''}</b></span>
-        <button class="sec" onclick="logout()">خروج</button>`
-      :`<button class="sec" onclick="openAuth('login')">تسجيل الدخول</button>
-        <button class="sec" onclick="openAuth('register')">حساب جديد</button>`;
-
-    render();
-
-  }catch(e){
-    console.error('Load error:',e);
-    $('view').innerHTML=
-      '<p style="color:#f87171">حدث خطأ أثناء تحميل البيانات. حاول تحديث الصفحة.</p>';
-  }
-}
-
-/* عرض الكورس */
-function card(c){
-  const on=mine.includes(c.id);
-  const img=imagePath(c.image);
-
-  return `
-  <div class="card">
-    <div class="thumb-wrap">
-      <img
-        src="${img}"
-        onerror="this.onerror=null;this.src='/dr2.jpg'"
-        alt="${c.title}"
-      >
-      <span class="plan-tag">${BADGE[c.plan]||c.plan}</span>
-      <span class="price-tag">${c.price} جنيه</span>
-    </div>
-
-    <div class="card-body">
-      <h4>${c.title}</h4>
-      <p>${c.desc}</p>
-
-      ${
-        on
-        ?'<button disabled>✅ أنت مشترك في هذا الكورس</button>'
-        :`<button onclick="enroll(${c.id})">اشترك الآن (${c.price} ج)</button>`
-      }
-    </div>
-  </div>`;
-}
-
-/* عرض الصفحات */
-function render(){
-  const q=$('q').value.trim();
-
-  const titles={
-    home:'الرئيسية',
-    all:'جميع الكورسات',
-    mine:'كورساتي'
-  };
-
-  $('title').textContent=titles[view];
-
-  document.querySelectorAll('aside a[data-v]').forEach(a=>{
-    a.classList.toggle('on',a.dataset.v==view);
-  });
-
-  let list=courses.filter(c=>
-    (plan=='all'||c.plan==plan)&&
-    (!q||c.title.includes(q)||c.desc.includes(q))
-  );
-
-  if(view=='mine'){
-    list=list.filter(c=>mine.includes(c.id));
+  function safeImage(image) {
+    if (!image) return '/dr2.jpg';
+    if (image === 'dr1.jpg' || image === 'dr2.jpg') return '/' + image;
+    if (image.startsWith('/')) return image;
+    return '/' + image;
   }
 
-  let h='';
-
-  if(view=='home'){
-
-    h+=`
-    <div class="hero">
-
-      <div class="hero-text">
-        <span class="tag">✨ المنصة التعليمية الأولى للتفوق والتميز</span>
-
-        <h1>أهلاً بك في منصة د. محمد رمضان</h1>
-
-        <p>
-        معك خطوة بخطوة لفهم المادة بأبسط أسلوب وأقوى تطبيق عملي.
-        اختر الباقة التي تناسبك وابدأ رحلة التفوق الآن.
-        </p>
-
-        <div class="hero-btns">
-          <button onclick="view='all';render()">تصفح جميع الكورسات ⬅️</button>
-
-          ${!token
-          ?`<button class="sec" onclick="openAuth('register')">إنشاء حساب طالب جديد</button>`
-          :''}
+  function courseCard(course) {
+    return `
+      <article class="course">
+        <img src="${safeImage(course.image)}"
+             alt="${escapeHTML(course.title)}"
+             onerror="this.src='/dr2.jpg'">
+        <div class="course-content">
+          <h3>${escapeHTML(course.title)}</h3>
+          <p>${escapeHTML(course.description || '')}</p>
+          <p><strong>السعر: ${Number(course.price || 0)} جنيه</strong></p>
+          <button onclick="enroll('${course.id}')">اشترك الآن</button>
         </div>
-      </div>
-
-      <div class="hero-main-img">
-        <img
-          src="/dr2.jpg"
-          alt="د. محمد رمضان"
-          onerror="this.onerror=null;this.src='/dr1.jpg'"
-        >
-        <div class="caption">د. محمد رمضان</div>
-      </div>
-
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <b style="color:var(--accent)">150 ج</b>
-        <span>اشتراك الشهر</span>
-      </div>
-
-      <div class="stat">
-        <b style="color:var(--ok)">450 ج</b>
-        <span>اشتراك الترم الكامل</span>
-      </div>
-
-      <div class="stat">
-        <b style="color:var(--gold)">950 ج</b>
-        <span>باقة السنة الشاملة</span>
-      </div>
-    </div>
-
-    <h2 style="margin-bottom:16px">🔥 الكورسات والباقات المتاحة</h2>
-
-    <div class="grid">
-      ${courses.map(card).join('')}
-    </div>`;
-
-  }else{
-
-    h+=`
-    <div class="tabs">
-      ${Object.entries(PLANS).map(([k,v])=>
-        `<button class="${k==plan?'on':''}"
-        onclick="plan='${k}';render()">${v}</button>`
-      ).join('')}
-    </div>`;
-
-    h+=list.length
-      ?`<div class="grid">${list.map(card).join('')}</div>`
-      :'<p style="color:var(--muted)">مفيش كورسات مطابقة لبحثك.</p>';
+      </article>`;
   }
 
-  $('view').innerHTML=h;
-}
+  function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;',
+      '"': '&quot;', "'": '&#39;'
+    })[char]);
+  }
 
-/* التنقل بين الصفحات */
-document.querySelectorAll('aside a[data-v]').forEach(a=>{
-  a.onclick=()=>{
-    if(a.dataset.v=='mine'&&!token){
-      return openAuth('login');
+  async function loadCourses() {
+    try {
+      const response = await fetch('/api/courses');
+      if (!response.ok) throw new Error('تعذر تحميل الكورسات');
+      courses = await response.json();
+
+      const html = courses.length
+        ? courses.map(courseCard).join('')
+        : '<p>لا توجد كورسات متاحة حاليًا.</p>';
+
+      document.getElementById('allCourses').innerHTML = html;
+      document.getElementById('homeCourses').innerHTML = html;
+    } catch (error) {
+      document.getElementById('allCourses').textContent = error.message;
+      document.getElementById('homeCourses').textContent = error.message;
+    }
+  }
+
+  async function register() {
+    const data = {
+      name: document.getElementById('registerName').value.trim(),
+      email: document.getElementById('registerEmail').value.trim(),
+      password: document.getElementById('registerPassword').value
+    };
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      document.getElementById('registerMessage').textContent =
+        result.message || result.error || (response.ok ? 'تم إنشاء الحساب' : 'حدث خطأ');
+      if (response.ok) showSection('login');
+    } catch {
+      document.getElementById('registerMessage').textContent = 'تعذر الاتصال بالخادم';
+    }
+  }
+
+  async function login() {
+    const data = {
+      email: document.getElementById('loginEmail').value.trim(),
+      password: document.getElementById('loginPassword').value
+    };
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result.error || 'بيانات الدخول غير صحيحة');
+
+      token = result.token;
+      localStorage.setItem('token', token);
+      if (result.user?.name) localStorage.setItem('userName', result.user.name);
+      updateUserStatus();
+      document.getElementById('loginMessage').textContent = 'تم تسجيل الدخول بنجاح';
+      showSection('courses');
+    } catch (error) {
+      document.getElementById('loginMessage').textContent = error.message;
+    }
+  }
+
+  async function enroll(id) {
+    if (!token) {
+      alert('سجل الدخول أولًا للاشتراك في الكورس');
+      showSection('login');
+      return;
     }
 
-    view=a.dataset.v;
-    plan='all';
-    side.classList.remove('open');
-    render();
-  };
-});
+    try {
+      const response = await fetch('/api/enroll', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({courseId: id})
+      });
+      const result = await response.json();
+      alert(result.message || result.error || 'تم إرسال طلب الاشتراك');
+    } catch {
+      alert('تعذر الاتصال بالخادم');
+    }
+  }
 
-$('acc').onclick=()=>token
-  ?alert('بيانات حسابك:\nالاسم: '+localStorage.name)
-  :openAuth('login');
+  async function loadMyCourses() {
+    if (!token) {
+      document.getElementById('myCoursesList').textContent = 'سجل الدخول أولًا.';
+      return;
+    }
 
-/* تسجيل الدخول وإنشاء الحساب */
-function openAuth(m){
-  mode=m;
+    try {
+      const response = await fetch('/api/my-courses', {
+        headers: {'Authorization': 'Bearer ' + token}
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'تعذر تحميل الكورسات');
 
-  $('dt').textContent=
-    m=='login'?'تسجيل الدخول':'إنشاء حساب طالب جديد';
+      document.getElementById('myCoursesList').innerHTML =
+        result.length ? result.map(courseCard).join('') : '<p>لم تشترك في أي كورس بعد.</p>';
+    } catch (error) {
+      document.getElementById('myCoursesList').textContent = error.message;
+    }
+  }
 
-  $('name').style.display=
-    $('phone').style.display=
-    m=='login'?'none':'block';
+  async function addCourse() {
+    const data = {
+      password: document.getElementById('adminPassword').value,
+      title: document.getElementById('courseTitle').value.trim(),
+      description: document.getElementById('courseDescription').value.trim(),
+      price: Number(document.getElementById('coursePrice').value),
+      image: document.getElementById('courseImage').value.trim() || 'dr2.jpg'
+    };
 
-  $('err').textContent='';
-
-  dlg.showModal();
-}
-
-async function submitAuth(){
-  try{
-    const d=await api('/api/'+mode,{
-      method:'POST',
-      body:{
-        email:$('email').value,
-        password:$('pass').value,
-        name:$('name').value,
-        phone:$('phone').value
+    try {
+      const response = await fetch('/api/admin/courses', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      document.getElementById('adminMessage').textContent =
+        result.message || result.error || 'تم تنفيذ الطلب';
+      if (response.ok) {
+        loadCourses();
       }
-    });
-
-    token=localStorage.token=d.token;
-    localStorage.name=d.name;
-
-    dlg.close();
-    load();
-
-  }catch(e){
-    $('err').textContent=e.message;
+    } catch {
+      document.getElementById('adminMessage').textContent = 'تعذر الاتصال بالخادم';
+    }
   }
-}
 
-/* تسجيل الخروج */
-function logout(s){
-  localStorage.clear();
-  token=null;
-  mine=[];
-  view='home';
-
-  if(!s)load();
-}
-
-/* الاشتراك في الكورس */
-async function enroll(id){
-  if(!token)return openAuth('login');
-
-  try{
-    await api('/api/enroll',{
-      method:'POST',
-      body:{courseId:id}
-    });
-
-    await load();
-
-    alert('تم الاشتراك في الكورس بنجاح ✅');
-
-  }catch(e){
-    alert(e.message);
-  }
-}
-
-/* لوحة تحكم الدكتور */
-function openAdmin(){
-  $('admErr').textContent='';
-  adminDlg.showModal();
-}
-
-/* إضافة كورس */
-async function addCourse(){
-  try{
-    await api('/api/admin/courses',{
-      method:'POST',
-      headers:{
-        'x-admin-password':$('admPass').value
-      },
-      body:{
-        title:$('cTitle').value,
-        plan:$('cPlan').value,
-        price:$('cPrice').value,
-        image:imagePath($('cImg').value),
-        desc:$('cDesc').value
-      }
-    });
-
-    adminDlg.close();
-
-    await load();
-
-    alert('تم نشر الكورس بنجاح ✅');
-
-  }catch(e){
-    $('admErr').textContent=e.message;
-  }
-}
-
-/* بدء الموقع */
-load();
-
+  updateUserStatus();
+  loadCourses();
 </script>
-
 </body>
 </html>
-
