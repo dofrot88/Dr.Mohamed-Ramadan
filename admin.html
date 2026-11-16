@@ -133,10 +133,10 @@ function coursesHTML(){
 }
 let gOpen=null;
 function gradesPanel(s){
-  return `<div style="padding:8px">${s.grades.map(g=>`<div class="v"><div><b>${g.type=='exam'?'📝 امتحان':'📘 واجب'}: ${esc(g.title)}</b> — ${g.score}/${g.max}</div><button class="del" onclick="delGrade(${g.id})">حذف</button></div>`).join('')||'<p style="color:var(--muted)">لا توجد درجات بعد.</p>'}
+  return `<div style="padding:8px">${(s.grades||[]).map(g=>`<div class="v"><div><b>${g.type=='exam'?'📝 امتحان':'📘 واجب'}: ${esc(g.title)}</b> — ${g.score}/${g.max}</div><button class="del" onclick="delGrade(${g.id})">حذف</button></div>`).join('')||'<p style="color:var(--muted)">لا توجد درجات بعد.</p>'}
   <div class="grid2" style="margin-top:10px">
    <select id="gType"><option value="exam">امتحان</option><option value="homework">واجب</option></select>
-   <select id="gCourse">${s.courseList.map(c=>`<option value="${c.id}">${esc(c.title)}</option>`).join('')}</select>
+   <select id="gCourse">${(s.courseList||[]).map(c=>`<option value="${c.id}">${esc(c.title)}</option>`).join('')}</select>
    <input id="gTitle" placeholder="اسم الامتحان / الواجب">
    <div style="display:flex;gap:8px"><input id="gScore" type="number" placeholder="الدرجة"><input id="gMax" type="number" placeholder="من" value="100"></div></div>
   <div class="err" id="gErr"></div><button style="background:var(--ok)" onclick="addGrade(${s.id})">+ إضافة الدرجة</button></div>`;
@@ -153,10 +153,10 @@ function studentCards(){
         <span>👨‍👩‍👦 ولي الأمر: ${s.parentPhone?`<a dir="ltr" href="tel:${esc(s.parentPhone)}">${esc(s.parentPhone)}</a><a class="wa" target="_blank" rel="noopener" href="${wa(s.parentPhone)}">واتساب</a>`:'<span class="no">غير مسجّل</span>'}
           <a style="cursor:pointer" onclick="editParent(${s.id})">✏️ ${s.parentPhone?'تعديل':'إضافة'}</a></span>
       </div>
-      <div>${s.courses.map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'<span class="tag">لم يشترك في كورس بعد</span>'}</div>
+      <div>${(s.courses||[]).map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'<span class="tag">لم يشترك في كورس بعد</span>'}</div>
     </div>
-    <div class="sm"><span>🎬 شاهد ${s.watched} فيديو</span><span>📅 سجّل في ${new Date(s.joined).toLocaleDateString('ar-EG')}</span>
-      <button onclick="gOpen=${gOpen===s.id?'null':s.id};render()">📝 الدرجات والواجبات (${s.grades.length})</button></div>
+    <div class="sm"><span>🎬 شاهد ${s.watched||0} فيديو</span><span>📅 سجّل في ${new Date(s.joined).toLocaleDateString('ar-EG')}</span>
+      <button onclick="gOpen=${gOpen===s.id?'null':s.id};render()">📝 الدرجات والواجبات (${(s.grades||[]).length})</button></div>
   </div>${gOpen===s.id?`<div style="margin-top:12px;border-top:1px solid var(--line)">${gradesPanel(s)}</div>`:''}</div>`).join('');
 }
 function studentList(){
@@ -168,8 +168,8 @@ function studentList(){
     <div class="sr"><span>📧</span><span>${esc(s.email)}</span></div>
     <div class="sr"><span>📱</span><span dir="ltr">${esc(s.phone)||'—'}</span></div>
     <div class="sr par"><span>👨‍👩‍👦 ولي الأمر</span><span dir="ltr">${s.parentPhone?`<a href="tel:${esc(s.parentPhone)}">${esc(s.parentPhone)}</a>`:'<i style="color:var(--red)">غير مسجّل</i>'}</span><a class="ed" onclick="editParent(${s.id})">✏️</a></div>
-    <div>${s.courses.map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'<span class="tag">غير مشترك في كورسات</span>'}</div>
-    <div class="ss"><span>🎬 شاهد ${s.watched} فيديو</span><span>📝 ${s.grades.length} درجة</span></div>
+    <div>${(s.courses||[]).map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'<span class="tag">غير مشترك في كورسات</span>'}</div>
+    <div class="ss"><span>🎬 شاهد ${s.watched||0} فيديو</span><span>📝 ${(s.grades||[]).length} درجة</span></div>
     <button onclick="gOpen=${gOpen===s.id?'null':s.id};render()">${gOpen===s.id?'إغلاق':'الدرجات والامتحانات'}</button>
     ${gOpen===s.id?gradesPanel(s):''}</div>`).join('')}</div>`;
 }
