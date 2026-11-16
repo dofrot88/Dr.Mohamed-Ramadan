@@ -10,66 +10,51 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
 button,input{font:inherit}
-button{cursor:pointer;border:0}
-.sidebar{position:fixed;right:0;top:0;bottom:0;width:235px;background:var(--panel);border-left:1px solid var(--line);padding:22px 16px;z-index:5;overflow:auto}
+button{cursor:pointer}
+.sidebar{position:fixed;right:0;top:0;bottom:0;width:235px;background:var(--panel);border-left:1px solid var(--line);padding:22px 16px;z-index:5}
 .brand{text-align:center;padding-bottom:20px;border-bottom:1px solid var(--line)}
-.brand img{width:105px;height:105px;object-fit:cover;border-radius:50%;border:3px solid var(--cyan)}
-.brand h3{margin:10px 0 5px}.brand p{color:var(--muted);font-size:12px;margin:0}
-.nav{display:grid;gap:8px;margin-top:22px}
-.nav button{padding:13px;text-align:right;background:transparent;color:#cbd5e1;border-radius:9px}
-.nav button:hover,.nav button.active{background:#2563eb30;color:#60a5fa}
-.main{margin-right:235px;padding:22px;min-height:100vh}
+.brand img{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--cyan)}
+.brand h3{margin:10px 0 5px}
+.brand p{font-size:12px;color:var(--muted)}
+nav{display:grid;gap:9px;margin-top:22px}
+nav button{padding:13px;text-align:right;border:0;border-radius:9px;background:transparent;color:#dbeafe}
+nav button:hover{background:#2563eb30;color:#60a5fa}
+main{margin-right:235px;padding:22px;min-height:100vh}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
-.search{flex:1;min-width:180px;max-width:400px}
-input{background:#0f172a;color:white;border:1px solid var(--line);border-radius:9px;padding:12px;width:100%;outline:none}
-input:focus{border-color:var(--cyan)}
-.btn{padding:11px 17px;border-radius:9px;font-weight:bold}
-.primary{background:var(--blue);color:white}.outline{background:transparent;border:1px solid var(--blue);color:#60a5fa}
-.gold{background:var(--gold);color:#172033}.red{background:#b42318;color:white}
-.auth-buttons,.user-area{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.hero{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:28px;background:linear-gradient(120deg,#172554,#0c4a6e);border:1px solid #2563eb55;border-radius:18px}
-.hero-content{flex:1;min-width:220px}.hero h1{font-size:29px;margin:0 0 12px}.hero p{line-height:1.9;color:#dbeafe}
-.hero img{width:205px;height:205px;object-fit:cover;border-radius:17px;border:3px solid #ffffff44}
-.tag{display:inline-block;color:#fbbf24;background:#f59e0b22;padding:7px 12px;border-radius:20px;font-size:12px;margin-bottom:12px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
-.stat,.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px}
-.stat strong{display:block;font-size:24px;color:#60a5fa}.stat span{font-size:13px;color:var(--muted)}
-.section{margin-top:27px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-.section-head h2{margin:0;font-size:21px}
-.courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:16px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:9px;padding:11px 16px;font-weight:bold}
+.primary{background:var(--blue);color:white}
+.outline{background:transparent;color:#60a5fa;border:1px solid var(--blue)}
+.gold{background:var(--gold);color:#111827}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:linear-gradient(120deg,#172554,#0c4a6e);border:1px solid #2563eb55;border-radius:18px;padding:28px}
+.hero h1{font-size:28px}
+.hero p{color:#dbeafe;line-height:1.9}
+.hero img{width:200px;height:200px;object-fit:cover;border-radius:16px;border:3px solid #ffffff55}
+.section{margin-top:28px}
+.section h2{font-size:21px}
+.courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
 .course{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden}
-.course img{width:100%;height:155px;object-fit:cover;background:#172554}
-.course-content{padding:15px}.course h3{margin:0 0 10px}.course p{color:var(--muted);font-size:13px;line-height:1.8}
-.price{color:#fbbf24;font-weight:bold;margin:12px 0}.course button{width:100%}
-.page{display:none}.page.active{display:block}
-.panel{max-width:650px}.panel h2{margin-top:0}
-.panel input{margin:7px 0 14px}
-.hint{font-size:13px;color:var(--muted);line-height:1.8}
-.empty{text-align:center;padding:25px;background:var(--panel);border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
-.message{color:#38bdf8;font-size:14px;margin-top:12px}
+.course img{width:100%;height:150px;object-fit:cover}
+.course-body{padding:15px}
+.course p{color:var(--muted);line-height:1.7;font-size:14px}
+.price{color:#fbbf24;font-weight:bold;margin:12px 0}
+.page{display:none}
+.page.active{display:block}
+.panel{background:var(--panel);border:1px solid var(--line);padding:22px;border-radius:14px;max-width:700px}
+.panel input{display:block;width:100%;padding:13px;margin:9px 0 15px;background:#0f172a;color:white;border:1px solid var(--line);border-radius:9px}
+.note{color:var(--muted);font-size:13px}
+.message{color:#38bdf8;margin-top:12px}
 .modal{display:none;position:fixed;inset:0;background:#000b;z-index:20;align-items:center;justify-content:center;padding:15px}
 .modal.show{display:flex}
-.modal-box{background:var(--panel);border:1px solid var(--line);width:100%;max-width:430px;padding:25px;border-radius:16px;position:relative;max-height:90vh;overflow:auto}
-.modal-box h2{margin-top:0}.modal-box input{margin:7px 0 13px}
-.modal-box .btn{width:100%;margin-top:7px}
-.close{position:absolute;left:15px;top:13px;background:#26344d;color:white;border-radius:50%;width:30px;height:30px}
-.switch{text-align:center;color:var(--muted);font-size:13px;margin-top:17px}
-.link{background:none;color:#38bdf8;padding:0}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:35px 0 15px}
+.modal-box{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:25px;width:100%;max-width:420px}
+.modal-box input{width:100%;padding:13px;margin:8px 0 13px;background:#0f172a;color:white;border:1px solid var(--line);border-radius:9px}
+.modal-box .btn{width:100%;margin-top:8px}
+.close{position:absolute;left:14px;top:12px;background:#26344d;color:white;border:0;border-radius:50%;width:32px;height:32px}
+.switch{background:none;border:0;color:#38bdf8;padding:0}
 .hidden{display:none!important}
-@media(max-width:800px){
-.sidebar{position:relative;width:100%;height:auto;padding:13px}
-.brand{display:flex;align-items:center;text-align:right;gap:12px}
-.brand img{width:65px;height:65px}.brand div{flex:1}
-.nav{grid-template-columns:repeat(2,1fr);gap:5px;margin-top:12px}
-.nav button{text-align:center;font-size:12px;padding:10px 5px}
-.main{margin:0;padding:14px}
-}
-@media(max-width:550px){
-.hero{padding:18px}.hero h1{font-size:22px}.hero img{width:125px;height:125px}
-.stats{grid-template-columns:1fr}.search{max-width:none;flex-basis:100%}
-.topbar{align-items:stretch}
-}
+.empty{padding:25px;background:var(--panel);border:1px dashed var(--line);border-radius:12px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);padding:35px 0}
+@media(max-width:800px){.sidebar{position:relative;width:100%;height:auto}.brand{display:flex;align-items:center;gap:12px;text-align:right}.brand img{width:65px;height:65px}.nav{grid-template-columns:repeat(2,1fr)}main{margin:0;padding:15px}.hero img{width:130px;height:130px}}
 </style>
 </head>
 <body>
@@ -79,83 +64,70 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:35px 0 15px}
     <img src="/dr2.jpg" alt="د. محمد رمضان" onerror="this.src='/dr1.jpg'">
     <div>
       <h3>د. محمد رمضان</h3>
-      <p>منصتك التعليمية للنجاح والتفوق</p>
+      <p>منصتك التعليمية</p>
     </div>
   </div>
-  <nav class="nav">
-    <button class="active" onclick="showPage('home',this)">🏠 الرئيسية</button>
-    <button onclick="showPage('courses',this)">📚 الكورسات</button>
-    <button onclick="showPage('myCourses',this)">🎓 كورساتي</button>
+  <nav>
+    <button onclick="showPage('home')">🏠 الرئيسية</button>
+    <button onclick="showPage('courses')">📚 الكورسات</button>
+    <button onclick="showPage('myCourses')">🎓 كورساتي</button>
     <button onclick="openAuth('login')">🔐 تسجيل الدخول</button>
     <button onclick="openAuth('register')">📝 إنشاء حساب</button>
-    <button onclick="showPage('admin',this)">⚙️ إدارة الكورسات</button>
-    <button onclick="logout()">🚪 تسجيل الخروج</button>
+    <button onclick="showPage('admin')">⚙️ إدارة المنصة</button>
   </nav>
 </aside>
 
-<main class="main">
+<main>
   <header class="topbar">
-    <div class="search">
-      <input id="searchInput" placeholder="ابحث عن كورس..." oninput="renderCourses()">
-    </div>
-    <div class="auth-buttons" id="guestButtons">
+    <strong>منصة د. محمد رمضان التعليمية</strong>
+    <div class="actions" id="guestActions">
       <button class="btn outline" onclick="openAuth('login')">تسجيل الدخول</button>
-      <button class="btn primary" onclick="openAuth('register')">حساب جديد</button>
+      <button class="btn primary" onclick="openAuth('register')">إنشاء حساب</button>
     </div>
-    <div class="user-area hidden" id="loggedButtons">
+    <div class="actions hidden" id="userActions">
       <span id="welcomeName"></span>
-      <button class="btn gold" onclick="logout()">خروج</button>
+      <button class="btn gold" onclick="logout()">تسجيل الخروج</button>
     </div>
   </header>
 
-  <section class="page active" id="home">
+  <section id="home" class="page active">
     <div class="hero">
-      <div class="hero-content">
-        <span class="tag">منصة د. محمد رمضان التعليمية</span>
+      <div>
         <h1>ابدأ رحلتك نحو التفوق والنجاح</h1>
-        <p>تعلم بسهولة، تابع كورساتك، وطور مهاراتك من خلال محتوى تعليمي منظم.</p>
-        <button class="btn gold" onclick="showPage('courses')">اكتشف الكورسات</button>
+        <p>تعلم بطريقة سهلة ومنظمة، وتابع كورساتك التعليمية في أي وقت.</p>
+        <button class="btn gold" onclick="showPage('courses')">استعرض الكورسات</button>
       </div>
       <img src="/dr1.jpg" alt="د. محمد رمضان" onerror="this.src='/dr2.jpg'">
     </div>
-
-    <div class="stats">
-      <div class="stat"><strong id="courseCount">0</strong><span>الكورسات المتاحة</span></div>
-      <div class="stat"><strong>24/7</strong><span>تعلم في أي وقت</span></div>
-      <div class="stat"><strong>100%</strong><span>رحلتك نحو التفوق</span></div>
+    <div class="section">
+      <h2>الكورسات المتاحة</h2>
+      <div id="homeCourses" class="courses"><div class="empty">جاري التحميل...</div></div>
     </div>
-
-    <section class="section">
-      <div class="section-head"><h2>الكورسات المتاحة</h2></div>
-      <div class="courses" id="homeCourses"><div class="empty">جاري تحميل الكورسات...</div></div>
-    </section>
   </section>
 
-  <section class="page" id="courses">
-    <div class="section-head"><h2>جميع الكورسات</h2></div>
-    <div class="courses" id="allCourses"><div class="empty">جاري التحميل...</div></div>
+  <section id="courses" class="page">
+    <div class="section">
+      <h2>جميع الكورسات</h2>
+      <div id="allCourses" class="courses"><div class="empty">جاري التحميل...</div></div>
+    </div>
   </section>
 
-  <section class="page" id="myCourses">
-    <div class="section-head"><h2>كورساتي</h2></div>
-    <div class="courses" id="myCoursesList"></div>
+  <section id="myCourses" class="page">
+    <div class="section">
+      <h2>كورساتي</h2>
+      <div id="myCoursesList" class="courses"></div>
+    </div>
   </section>
 
-  <section class="page" id="admin">
+  <section id="admin" class="page">
     <div class="panel">
-      <h2>⚙️ إدارة وإضافة الكورسات</h2>
-      <p class="hint">أدخل كلمة مرور الإدارة، ثم اكتب تفاصيل الكورس لإضافته إلى الموقع.</p>
-      <label>كلمة مرور الإدارة</label>
-      <input id="adminPassword" type="password" placeholder="اكتب كلمة المرور">
-      <label>اسم الكورس</label>
-      <input id="courseTitle" placeholder="مثال: كورس البرمجة">
-      <label>وصف الكورس</label>
-      <input id="courseDescription" placeholder="اكتب وصف الكورس">
-      <label>سعر الكورس بالجنيه</label>
-      <input id="coursePrice" type="number" min="0" placeholder="السعر">
-      <label>صورة الكورس</label>
-      <input id="courseImage" placeholder="dr1.jpg أو dr2.jpg">
-      <p class="hint">لو تركت الصورة فارغة، ستُستخدم dr2.jpg تلقائيًا.</p>
+      <h2>⚙️ لوحة إدارة المنصة</h2>
+      <p class="note">أدخل كلمة مرور الإدارة لإضافة كورس جديد.</p>
+      <input id="adminPassword" type="password" placeholder="كلمة مرور الإدارة">
+      <input id="courseTitle" placeholder="اسم الكورس">
+      <input id="courseDescription" placeholder="تفاصيل ووصف الكورس">
+      <input id="coursePrice" type="number" min="0" placeholder="سعر الكورس">
+      <input id="courseImage" placeholder="اسم الصورة: dr1.jpg أو dr2.jpg">
       <button class="btn primary" onclick="addCourse()">➕ إضافة الكورس</button>
       <p id="adminMessage" class="message"></p>
     </div>
@@ -169,28 +141,28 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:35px 0 15px}
     <button class="close" onclick="closeAuth()">×</button>
 
     <div id="loginForm">
-      <h2>أهلًا بك من جديد 👋</h2>
-      <p class="hint">اكتب رقم الموبايل أو البريد الإلكتروني المسجل به.</p>
-      <input id="loginIdentifier" placeholder="رقم الموبايل أو البريد الإلكتروني">
+      <h2>تسجيل الدخول 👋</h2>
+      <p class="note">استخدم رقم هاتفك أو بريدك الإلكتروني.</p>
+      <input id="loginIdentifier" placeholder="رقم الهاتف أو البريد الإلكتروني">
       <input id="loginPassword" type="password" placeholder="كلمة المرور">
-      <button class="btn primary" onclick="login()">تسجيل الدخول</button>
+      <button class="btn primary" onclick="login()">دخول</button>
       <p id="loginMessage" class="message"></p>
-      <div class="switch">ليس لديك حساب؟
-        <button class="link" onclick="switchAuth('register')">إنشاء حساب جديد</button>
-      </div>
+      <p class="note">ليس لديك حساب؟
+        <button class="switch" onclick="switchAuth('register')">إنشاء حساب جديد</button>
+      </p>
     </div>
 
     <div id="registerForm" class="hidden">
       <h2>إنشاء حساب جديد ✨</h2>
-      <p class="hint">يمكنك التسجيل برقم الهاتف أو البريد الإلكتروني. يكفي إدخال واحد منهما.</p>
+      <p class="note">يمكنك التسجيل برقم الهاتف أو البريد الإلكتروني.</p>
       <input id="registerName" placeholder="الاسم بالكامل">
-      <input id="registerIdentifier" placeholder="رقم الموبايل أو البريد الإلكتروني">
-      <input id="registerPassword" type="password" placeholder="أنشئ كلمة مرور">
+      <input id="registerIdentifier" placeholder="رقم الهاتف أو البريد الإلكتروني">
+      <input id="registerPassword" type="password" placeholder="كلمة المرور">
       <button class="btn primary" onclick="register()">إنشاء الحساب</button>
       <p id="registerMessage" class="message"></p>
-      <div class="switch">لديك حساب بالفعل؟
-        <button class="link" onclick="switchAuth('login')">تسجيل الدخول</button>
-      </div>
+      <p class="note">لديك حساب بالفعل؟
+        <button class="switch" onclick="switchAuth('login')">تسجيل الدخول</button>
+      </p>
     </div>
   </div>
 </div>
@@ -199,183 +171,194 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:35px 0 15px}
 let token = localStorage.getItem('token') || '';
 let courses = [];
 
-function showPage(id,button){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  if(button) button.classList.add('active');
-  if(id==='courses'||id==='home') loadCourses();
-  if(id==='myCourses') loadMyCourses();
+  if (id === 'courses' || id === 'home') loadCourses();
+  if (id === 'myCourses') loadMyCourses();
 }
 
-function openAuth(type){
+function openAuth(type) {
   document.getElementById('authModal').classList.add('show');
   switchAuth(type);
 }
-function closeAuth(){document.getElementById('authModal').classList.remove('show')}
-function outsideClose(e){if(e.target.id==='authModal')closeAuth()}
-function switchAuth(type){
-  document.getElementById('loginForm').classList.toggle('hidden',type!=='login');
-  document.getElementById('registerForm').classList.toggle('hidden',type!=='register');
+function closeAuth() {
+  document.getElementById('authModal').classList.remove('show');
+}
+function outsideClose(e) {
+  if (e.target.id === 'authModal') closeAuth();
+}
+function switchAuth(type) {
+  document.getElementById('loginForm').classList.toggle('hidden', type !== 'login');
+  document.getElementById('registerForm').classList.toggle('hidden', type !== 'register');
 }
 
-function updateUser(){
-  const logged=!!token;
-  document.getElementById('guestButtons').classList.toggle('hidden',logged);
-  document.getElementById('loggedButtons').classList.toggle('hidden',!logged);
-  document.getElementById('welcomeName').textContent=
-    logged?'مرحبًا، '+(localStorage.getItem('userName')||'طالب'):'';
+function updateUser() {
+  const name = localStorage.getItem('userName') || 'طالب';
+  document.getElementById('guestActions').classList.toggle('hidden', !!token);
+  document.getElementById('userActions').classList.toggle('hidden', !token);
+  document.getElementById('welcomeName').textContent = 'مرحبًا، ' + name;
 }
-function logout(){
-  token='';
+function logout() {
+  token = '';
   localStorage.removeItem('token');
   localStorage.removeItem('userName');
   updateUser();
   showPage('home');
-  alert('تم تسجيل الخروج');
 }
 
-function escapeHTML(value){
-  return String(value??'').replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+function safeImage(image) {
+  if (image === 'dr1.jpg' || image === '/dr1.jpg') return '/dr1.jpg';
+  if (image === 'dr2.jpg' || image === '/dr2.jpg' || !image) return '/dr2.jpg';
+  return image.startsWith('/') ? image : '/' + image;
+}
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
   })[c]);
 }
-function safeImage(image){
-  if(!image)return '/dr2.jpg';
-  if(image==='dr1.jpg'||image==='dr2.jpg')return '/'+image;
-  if(image.startsWith('/'))return image;
-  return '/'+image;
-}
-function courseCard(c){
+function courseCard(c) {
   return `<article class="course">
     <img src="${safeImage(c.image)}" alt="${escapeHTML(c.title)}" onerror="this.src='/dr2.jpg'">
-    <div class="course-content">
+    <div class="course-body">
       <h3>${escapeHTML(c.title)}</h3>
-      <p>${escapeHTML(c.description||'كورس تعليمي مميز')}</p>
-      <div class="price">${Number(c.price||0)} جنيه</div>
-      <button class="btn primary" onclick="enroll('${encodeURIComponent(c.id)}')">اشترك الآن</button>
+      <p>${escapeHTML(c.description || '')}</p>
+      <div class="price">${Number(c.price || 0)} جنيه</div>
+      <button class="btn primary" onclick="enroll('${c.id}')">اشترك الآن</button>
     </div>
   </article>`;
 }
-function renderCourses(){
-  const q=document.getElementById('searchInput').value.trim().toLowerCase();
-  const filtered=courses.filter(c=>String(c.title||'').toLowerCase().includes(q));
-  const html=filtered.length?filtered.map(courseCard).join():'<div class="empty">لا توجد كورسات مطابقة.</div>';
-  document.getElementById('allCourses').innerHTML=html;
-  document.getElementById('homeCourses').innerHTML=html;
-}
-async function loadCourses(){
-  try{
-    const r=await fetch('/api/courses');
-    if(!r.ok)throw new Error();
-    courses=await r.json();
-    document.getElementById('courseCount').textContent=courses.length;
-    renderCourses();
-  }catch{
-    document.getElementById('allCourses').innerHTML='<div class="empty">تعذر تحميل الكورسات.</div>';
-    document.getElementById('homeCourses').innerHTML='<div class="empty">تعذر تحميل الكورسات.</div>';
+
+async function loadCourses() {
+  try {
+    const r = await fetch('/api/courses');
+    if (!r.ok) throw new Error();
+    courses = await r.json();
+    const html = courses.length ? courses.map(courseCard).join('') :
+      '<div class="empty">لا توجد كورسات مضافة حتى الآن.</div>';
+    document.getElementById('homeCourses').innerHTML = html;
+    document.getElementById('allCourses').innerHTML = html;
+  } catch {
+    document.getElementById('homeCourses').innerHTML = '<div class="empty">تعذر تحميل الكورسات.</div>';
+    document.getElementById('allCourses').innerHTML = '<div class="empty">تعذر تحميل الكورسات.</div>';
   }
 }
 
-async function register(){
-  const name=document.getElementById('registerName').value.trim();
-  const identifier=document.getElementById('registerIdentifier').value.trim();
-  const password=document.getElementById('registerPassword').value;
-  const msg=document.getElementById('registerMessage');
-  if(!name||!identifier||!password){
-    msg.textContent='أدخل الاسم ورقم الهاتف أو البريد الإلكتروني وكلمة المرور.';
+async function register() {
+  const name = document.getElementById('registerName').value.trim();
+  const identifier = document.getElementById('registerIdentifier').value.trim();
+  const password = document.getElementById('registerPassword').value;
+  const msg = document.getElementById('registerMessage');
+
+  if (!name || !identifier || !password) {
+    msg.textContent = 'من فضلك املأ جميع البيانات.';
     return;
   }
-  try{
-    const r=await fetch('/api/register',{
+  try {
+    const r = await fetch('/api/register', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name,identifier,password})
+      body:JSON.stringify({name, identifier, password})
     });
-    const data=await r.json();
-    if(!r.ok)throw new Error(data.error||'تعذر إنشاء الحساب');
-    msg.textContent='تم إنشاء الحساب بنجاح. يمكنك تسجيل الدخول الآن.';
-    document.getElementById('loginIdentifier').value=identifier;
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'تعذر إنشاء الحساب');
+    msg.textContent = 'تم إنشاء الحساب بنجاح. يمكنك تسجيل الدخول الآن.';
+    document.getElementById('loginIdentifier').value = identifier;
     switchAuth('login');
-  }catch(e){msg.textContent=e.message}
+  } catch(e) { msg.textContent = e.message; }
 }
 
-async function login(){
-  const identifier=document.getElementById('loginIdentifier').value.trim();
-  const password=document.getElementById('loginPassword').value;
-  const msg=document.getElementById('loginMessage');
-  if(!identifier||!password){msg.textContent='أدخل رقم الهاتف أو البريد وكلمة المرور.';return}
-  try{
-    const r=await fetch('/api/login',{
+async function login() {
+  const identifier = document.getElementById('loginIdentifier').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const msg = document.getElementById('loginMessage');
+
+  try {
+    const r = await fetch('/api/login', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({identifier,password})
+      body:JSON.stringify({identifier, password})
     });
-    const data=await r.json();
-    if(!r.ok)throw new Error(data.error||'بيانات الدخول غير صحيحة');
-    token=data.token;
-    localStorage.setItem('token',token);
-    localStorage.setItem('userName',data.user.name);
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'بيانات الدخول غير صحيحة');
+
+    token = data.token;
+    localStorage.setItem('token', token);
+    localStorage.setItem('userName', data.user.name);
     updateUser();
     closeAuth();
     showPage('myCourses');
-  }catch(e){msg.textContent=e.message}
+  } catch(e) { msg.textContent = e.message; }
 }
 
-async function enroll(encodedId){
-  if(!token){openAuth('login');return}
-  const courseId=decodeURIComponent(encodedId);
-  try{
-    const r=await fetch('/api/enroll',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-      body:JSON.stringify({courseId})
-    });
-    const data=await r.json();
-    if(!r.ok)throw new Error(data.error||'تعذر الاشتراك');
-    alert(data.message||'تم إرسال طلب الاشتراك');
-    loadMyCourses();
-  }catch(e){alert(e.message)}
-}
-
-async function loadMyCourses(){
-  const box=document.getElementById('myCoursesList');
-  if(!token){
-    box.innerHTML='<div class="empty">سجل الدخول أولًا لمشاهدة كورساتك.<br><br><button class="btn primary" onclick="openAuth(\\'login\\')">تسجيل الدخول</button></div>';
+async function enroll(courseId) {
+  if (!token) {
+    openAuth('login');
     return;
   }
-  try{
-    const r=await fetch('/api/my-courses',{headers:{'Authorization':'Bearer '+token}});
-    const data=await r.json();
-    if(!r.ok)throw new Error(data.error||'تعذر تحميل الكورسات');
-    box.innerHTML=data.length?data.map(courseCard).join():'<div class="empty">لم تشترك في أي كورس حتى الآن.</div>';
-  }catch(e){box.innerHTML='<div class="empty">'+escapeHTML(e.message)+'</div>'}
+  try {
+    const r = await fetch('/api/enroll', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer ' + token
+      },
+      body:JSON.stringify({courseId})
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'تعذر الاشتراك');
+    alert(data.message || 'تم إرسال طلب الاشتراك');
+  } catch(e) { alert(e.message); }
 }
 
-async function addCourse(){
-  const password=document.getElementById('adminPassword').value;
-  const title=document.getElementById('courseTitle').value.trim();
-  const description=document.getElementById('courseDescription').value.trim();
-  const price=document.getElementById('coursePrice').value;
-  const image=document.getElementById('courseImage').value.trim()||'dr2.jpg';
-  const msg=document.getElementById('adminMessage');
+async function loadMyCourses() {
+  const box = document.getElementById('myCoursesList');
+  if (!token) {
+    box.innerHTML = '<div class="empty">سجل الدخول أولًا لمشاهدة كورساتك. <button class="btn primary" onclick="openAuth(\\'login\\')">تسجيل الدخول</button></div>';
+    return;
+  }
+  try {
+    const r = await fetch('/api/my-courses', {
+      headers:{'Authorization':'Bearer ' + token}
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'تعذر تحميل الكورسات');
+    box.innerHTML = data.length ? data.map(courseCard).join('') :
+      '<div class="empty">لم تشترك في أي كورس حتى الآن.</div>';
+  } catch(e) { box.textContent = e.message; }
+}
 
-  if(!password||!title){msg.textContent='أدخل كلمة مرور الإدارة واسم الكورس.';return}
-  try{
-    const r=await fetch('/api/admin/courses',{
+async function addCourse() {
+  const msg = document.getElementById('adminMessage');
+  const data = {
+    password:document.getElementById('adminPassword').value,
+    title:document.getElementById('courseTitle').value.trim(),
+    description:document.getElementById('courseDescription').value.trim(),
+    price:Number(document.getElementById('coursePrice').value || 0),
+    image:document.getElementById('courseImage').value.trim() || 'dr2.jpg'
+  };
+
+  if (!data.password || !data.title) {
+    msg.textContent = 'اكتب كلمة مرور الإدارة واسم الكورس.';
+    return;
+  }
+
+  try {
+    const r = await fetch('/api/admin/courses', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({password,title,description,price,image})
+      body:JSON.stringify(data)
     });
-    const data=await r.json();
-    if(!r.ok)throw new Error(data.error||'تعذر إضافة الكورس');
-    msg.textContent='✅ تمت إضافة الكورس بنجاح';
-    document.getElementById('courseTitle').value='';
-    document.getElementById('courseDescription').value='';
-    document.getElementById('coursePrice').value='';
-    document.getElementById('courseImage').value='';
-    loadCourses();
-  }catch(e){msg.textContent=e.message}
+    const result = await r.json();
+    if (!r.ok) throw new Error(result.error || 'تعذرت إضافة الكورس');
+
+    msg.textContent = '✅ تمت إضافة الكورس بنجاح.';
+    document.getElementById('courseTitle').value = '';
+    document.getElementById('courseDescription').value = '';
+    document.getElementById('coursePrice').value = '';
+    document.getElementById('courseImage').value = '';
+    await loadCourses();
+  } catch(e) { msg.textContent = e.message; }
 }
 
 updateUser();
