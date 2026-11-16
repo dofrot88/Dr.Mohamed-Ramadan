@@ -24,7 +24,19 @@ const seed = {
   students: [], enrollments: []
 };
 
-const load = () => { if (!fs.existsSync(DB)) save(seed); return JSON.parse(fs.readFileSync(DB, 'utf8')); };
+// دالة التحميل مع التأكد التام من عدم فراغ الكورسات أبداً
+const load = () => { 
+  if (!fs.existsSync(DB)) {
+    fs.writeFileSync(DB, JSON.stringify(seed, null, 2));
+  }
+  const data = JSON.parse(fs.readFileSync(DB, 'utf8'));
+  if (!data.courses || data.courses.length === 0) {
+    data.courses = seed.courses;
+    fs.writeFileSync(DB, JSON.stringify(data, null, 2));
+  }
+  return data; 
+};
+
 const save = d => fs.writeFileSync(DB, JSON.stringify(d, null, 2));
 const tokens = new Map();
 
