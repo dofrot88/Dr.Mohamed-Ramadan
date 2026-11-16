@@ -112,14 +112,37 @@ function coursesHTML(){
       <div class="err" id="vErr"></div><button style="background:var(--ok)" onclick="addVideo(${c.id})">+ إضافة الفيديو</button></div>`:''}
   </div>`).join('');
 }
+let gOpen=null;
+function gradesPanel(s){
+  return `<div style="padding:8px">${s.grades.map(g=>`<div class="v"><div><b>${g.type=='exam'?'📝 امتحان':'📘 واجب'}: ${esc(g.title)}</b> — ${g.score}/${g.max}</div><button class="del" onclick="delGrade(${g.id})">حذف</button></div>`).join('')||'<p style="color:var(--muted)">لا توجد درجات بعد.</p>'}
+  <div class="grid2" style="margin-top:10px">
+   <select id="gType"><option value="exam">امتحان</option><option value="homework">واجب</option></select>
+   <select id="gCourse">${s.courseList.map(c=>`<option value="${c.id}">${esc(c.title)}</option>`).join('')}</select>
+   <input id="gTitle" placeholder="اسم الامتحان / الواجب">
+   <div style="display:flex;gap:8px"><input id="gScore" type="number" placeholder="الدرجة"><input id="gMax" type="number" placeholder="من" value="100"></div></div>
+  <div class="err" id="gErr"></div><button style="background:var(--ok)" onclick="addGrade(${s.id})">+ إضافة الدرجة</button></div>`;
+}
 function studentsHTML(){
-  const l=students.filter(s=>!q||[s.name,s.email,s.phone].join(' ').includes(q));
+  const l=students.filter(s=>!q||[s.name,s.email,s.phone,s.parentPhone].join(' ').includes(q));
   return `<div class="box"><input placeholder="ابحث بالاسم أو الإيميل أو الموبايل..." value="${esc(q)}" oninput="q=this.value;render();this.focus()">
-  <div class="tw"><table><tr><th>#</th><th>الاسم</th><th>الإيميل</th><th>الموبايل</th><th>تاريخ التسجيل</th><th>الكورسات</th></tr>
+  <div class="tw"><table><tr><th>#</th><th>الاسم</th><th>الإيميل</th><th>موبايل الطالب</th><th>ولي الأمر</th><th>التسجيل</th><th>الكورسات</th><th>فيديوهات شاهدها</th><th></th></tr>
   ${l.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.name)}</td><td>${esc(s.email)}</td><td dir="ltr">${esc(s.phone)}</td>
+   <td dir="ltr">${esc(s.parentPhone)||'—'} <a style="cursor:pointer" onclick="editParent(${s.id})">✏️</a></td>
    <td>${new Date(s.joined).toLocaleDateString('ar-EG')}</td>
-   <td>${s.courses.map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'—'}</td></tr>`).join('')||'<tr><td colspan="6" style="color:var(--muted)">لا يوجد طلاب.</td></tr>'}
+   <td>${s.courses.map(c=>`<span class="tag">${esc(c)}</span>`).join('')||'—'}</td><td>${s.watched}</td>
+   <td><button onclick="gOpen=${gOpen===s.id?'null':s.id};render()">الدرجات (${s.grades.length})</button></td></tr>
+   ${gOpen===s.id?`<tr><td colspan="9">${gradesPanel(s)}</td></tr>`:''}`).join('')||'<tr><td colspan="9" style="color:var(--muted)">لا يوجد طلاب.</td></tr>'}
   </table></div></div>`;
+}
+async function reloadS(){students=await api('/api/admin/students');render()}
+async function addGrade(id){
+  try{await api('/api/admin/grades',{method:'POST',body:{studentId:id,courseId:$('gCourse').value,type:$('gType').value,title:$('gTitle').value,score:$('gScore').value,max:$('gMax').value}});await reloadS()}
+  catch(e){$('gErr').textContent=e.message}
+}
+async function delGrade(id){if(confirm('حذف الدرجة؟')){await api('/api/admin/grades/'+id,{method:'DELETE'});await reloadS()}}
+async function editParent(id){
+  const s=students.find(x=>x.id==id),v=prompt('رقم ولي الأمر الجديد:',s.parentPhone);
+  if(v&&v.trim()){try{await api(`/api/admin/students/${id}/parent`,{method:'POST',body:{parentPhone:v}});await reloadS()}catch(e){alert(e.message)}}
 }
 async function reload(){courses=await api('/api/admin/courses');render()}
 async function addCourse(){
