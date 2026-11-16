@@ -2,8 +2,13 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
       "destination": "/server.js"
     }
-  ]
+  ],
+  "functions": {
+    "server.js": {
+      "includeFiles": ["dr1.jpg", "dr2.jpg", "index.html"]
+    }
+  }
 }
