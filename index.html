@@ -47,6 +47,9 @@ main{margin-right:235px;flex:1;min-width:0}
 .thumb-wrap.p-month{background:linear-gradient(135deg,#7c3aed,#4f46e5)}.thumb-wrap.p-term{background:linear-gradient(135deg,#0891b2,#2563eb)}.thumb-wrap.p-year{background:linear-gradient(135deg,#ea580c,#db2777)}
 .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:2.2rem;font-weight:800;color:#fff;opacity:.9}
 .thumb-wrap img{position:relative;z-index:1}
+.thumb-wrap{background:linear-gradient(135deg,#1e3a5f,#0f172a)}
+.plan-tag{max-width:75%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.74rem;padding:3px 10px}
+.plan-tag.month{color:#38bdf8;border-color:#38bdf8}.plan-tag.term{color:#34d399;border-color:#34d399}.plan-tag.year{color:#f59e0b;border-color:#f59e0b}
 .price-tag{position:absolute;bottom:12px;left:12px;background:var(--ok);color:#fff;padding:4px 12px;border-radius:8px;font-weight:800;font-size:.95rem}
 .card-body{padding:16px;flex:1;display:flex;flex-direction:column}
 .card h4{font-size:1.05rem;margin-bottom:8px;color:#fff}
@@ -69,7 +72,7 @@ input.f{width:100%;padding:11px;margin:7px 0;border-radius:8px;border:1px solid 
 </head>
 <body>
 <aside id="side">
-  <div class="brand"><img src="/dr2.jpg" alt="د. محمد رمضان" onerror="this.style.visibility='hidden'"><h2>د. محمد رمضان</h2><span>المنصة التعليمية الرسمية</span></div>
+  <div class="brand"><img src="/dr2.jpg" alt="د. محمد رمضان" onerror="if(this.dataset.f){this.style.visibility='hidden'}else{this.dataset.f=1;this.src='/dr1.jpg'}"><h2>د. محمد رمضان</h2><span>المنصة التعليمية الرسمية</span></div>
   <a data-v="home" class="on">🏠 الرئيسية</a>
   <a data-v="all">📚 جميع الكورسات</a>
   <a data-v="mine">🎓 كورساتي المشترك بها</a>
@@ -130,11 +133,17 @@ async function load(){
   }catch(e){$('view').innerHTML='<p style="color:#f87171">حدث خطأ أثناء تحميل البيانات. حاول تحديث الصفحة.</p>'}
 }
 
+const PW={month:'الشهر',term:'الترم',year:'السنة'};
+const isDef=p=>!p||p=='/dr1.jpg'||p=='/dr2.jpg';
+const cardImg=c=>isDef(c.image)?(c.id%2?'/dr1.jpg':'/dr2.jpg'):imagePath(c.image);
+const altImg=c=>cardImg(c)=='/dr1.jpg'?'/dr2.jpg':'/dr1.jpg';
+function imgErr(i){if(i.dataset.fb){const f=i.dataset.fb;i.dataset.fb='';i.src=f}else i.style.display='none'}
+function tagText(c){const n=String(c.title).split(' - ').pop();return esc((PW[c.plan]||c.plan)+' • '+n)}
 function card(c){
   const on=mine.includes(c.id);
   return `<div class="card"><div class="thumb-wrap p-${esc(c.plan)}"><span class="ph">${BADGE[c.plan]||''}</span>
-    <img src="${esc(imagePath(c.image))}" onerror="if(this.dataset.f){this.style.display='none'}else{this.dataset.f=1;this.src='/dr2.jpg'}" alt="${esc(c.title)}">
-    <span class="plan-tag">${BADGE[c.plan]||esc(c.plan)}</span><span class="price-tag">${+c.price} جنيه</span></div>
+    <img src="${esc(cardImg(c))}" data-fb="${altImg(c)}" onerror="imgErr(this)" alt="${esc(c.title)}">
+    <span class="plan-tag ${esc(c.plan)}">${tagText(c)}</span><span class="price-tag">${+c.price} جنيه</span></div>
     <div class="card-body"><h4>${esc(c.title)}</h4><p>${esc(c.desc)}</p>
     ${on?`<button style="background:var(--ok)" onclick="openCourse(${c.id})">▶ الدخول للكورس</button>`
         :`<button onclick="enroll(${c.id})">اشترك الآن (${+c.price} ج)</button>`}</div></div>`;
@@ -168,7 +177,7 @@ function render(){
     <p>معك خطوة بخطوة لفهم المادة بأبسط أسلوب وأقوى تطبيق عملي. اختر الباقة التي تناسبك وابدأ رحلة التفوق الآن.</p>
     <div class="hero-btns"><button onclick="view='all';render()">تصفح جميع الكورسات ⬅️</button>
     ${!token?`<button class="sec" onclick="openAuth('register')">إنشاء حساب طالب جديد</button>`:''}</div></div>
-    <div class="hero-main-img"><img src="/dr2.jpg" alt="د. محمد رمضان" onerror="this.style.visibility='hidden'"><div class="caption">د. محمد رمضان</div></div></div>
+    <div class="hero-main-img"><img src="/dr2.jpg" alt="د. محمد رمضان" onerror="if(this.dataset.f){this.style.visibility='hidden'}else{this.dataset.f=1;this.src='/dr1.jpg'}"><div class="caption">د. محمد رمضان</div></div></div>
     <div class="stats"><div class="stat"><b style="color:var(--accent)">150 ج</b><span>اشتراك الشهر</span></div>
     <div class="stat"><b style="color:var(--ok)">450 ج</b><span>اشتراك الترم الكامل</span></div>
     <div class="stat"><b style="color:var(--gold)">950 ج</b><span>باقة السنة الشاملة</span></div></div>
