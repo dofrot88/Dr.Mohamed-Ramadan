@@ -169,5 +169,4 @@ app.get('/api/admin/students', adminAuth, (req, res) => {
 });
 
 if (!process.env.VERCEL) app.listen(process.env.PORT || 3000, () => console.log('http://localhost:3000  |  admin: /admin'));
-module.exports = app;ORT || 3000, () => console.log('http://localhost:3000  |  admin: /admin'));
 module.exports = app;
