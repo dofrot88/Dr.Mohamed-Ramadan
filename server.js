@@ -13,7 +13,7 @@ const DB = process.env.VERCEL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'; // غيّرها!
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 const seed = {
   courses: [
@@ -43,70 +43,9 @@ const auth = (req, res, next) => {
 };
 const hash = p => crypto.createHash('sha256').update(p).digest('hex');
 
-// عرض الصفحة الرئيسية من فولدر public
+// عرض الصفحة الرئيسية من المسار الرئيسي
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// الكورسات (ممكن فلترة بالخطة)
-app.get('/api/courses', (req, res) => {
-  const { plan } = req.query;
-  res.json(load().courses.filter(c => !plan || c.plan === plan));
-});
-
-// تسجيل حساب
-app.post('/api/register', (req, res) => {
-  const { name, email, password, phone } = req.body;
-  if (!name || !email || !password || password.length < 6)
-    return res.status(400).json({ error: 'البيانات ناقصة (الباسورد 6 حروف على الأقل)' });
-  const db = load();
-  if (db.students.find(s => s.email === email)) return res.status(400).json({ error: 'الإيميل مستخدم' });
-  const s = { id: Date.now(), name, email, phone: phone || '', password: hash(password) };
-  db.students.push(s); save(db);
-  const t = crypto.randomUUID(); tokens.set(t, s.id);
-  res.json({ token: t, name });
-});
-
-// تسجيل دخول
-app.post('/api/login', (req, res) => {
-  const { email, password } = req.body;
-  const s = load().students.find(x => x.email === email && x.password === hash(password || ''));
-  if (!s) return res.status(401).json({ error: 'بيانات غلط' });
-  const t = crypto.randomUUID(); tokens.set(t, s.id);
-  res.json({ token: t, name: s.name });
-});
-
-// الاشتراك في كورس
-app.post('/api/enroll', auth, (req, res) => {
-  const db = load(); const courseId = +req.body.courseId;
-  if (!db.courses.find(c => c.id === courseId)) return res.status(404).json({ error: 'الكورس مش موجود' });
-  if (db.enrollments.find(e => e.studentId === req.studentId && e.courseId === courseId))
-    return res.status(400).json({ error: 'أنت مشترك بالفعل' });
-  db.enrollments.push({ studentId: req.studentId, courseId, date: new Date().toISOString() });
-  save(db); res.json({ ok: true });
-});
-
-// كورساتي
-app.get('/api/my-courses', auth, (req, res) => {
-  const db = load();
-  const ids = db.enrollments.filter(e => e.studentId === req.studentId).map(e => e.courseId);
-  res.json(db.courses.filter(c => ids.includes(c.id)));
-});
-
-// لوحة الدكتور: إضافة كورس
-app.post('/api/admin/courses', (req, res) => {
-  if (req.headers['x-admin-password'] !== ADMIN_PASSWORD) return res.status(403).json({ error: 'غير مسموح' });
-  const { title, plan, price, desc } = req.body;
-  if (!title || !['month', 'term', 'year'].includes(plan)) return res.status(400).json({ error: 'بيانات غلط' });
-  const db = load();
-  const c = { id: Date.now(), title, plan, price: +price || 0, desc: desc || '' };
-  db.courses.push(c); save(db); res.json(c);
-});
-
-// تشغيل السيرفر محلياً فقط
-if (!process.env.VERCEL) {
-  app.listen(process.env.PORT || 3000, () => console.log('http://localhost:3000'));
-}
-
-// تصدير السيرفر لـ Vercel
-module.exports = app;
+// الكورسات (ممكن فل
