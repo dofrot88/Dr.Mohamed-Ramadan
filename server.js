@@ -48,12 +48,16 @@ const kv = cmd => fetch(KV_URL, {
 }).then(r => r.json());
 
 const save = async d => {
-  if (KV_URL && KV_TOKEN) await kv(['SET', KEY, JSON.stringify(d)]);
+  if (KV_URL && KV_TOKEN) { const r = await kv(['SET', KEY, JSON.stringify(d)]); if (r.error) throw new Error('Redis SET: ' + r.error); }
   else fs.writeFileSync(DB, JSON.stringify(d, null, 2));
 };
 const load = async () => {
   let d = null;
-  if (KV_URL && KV_TOKEN) { const r = await kv(['GET', KEY]); if (r.result) d = JSON.parse(r.result); }
+  if (KV_URL && KV_TOKEN) {
+    const r = await kv(['GET', KEY]);
+    if (r.error) throw new Error('Redis GET: ' + r.error); // ممنوع نكتب بيانات أولية فوق بياناتك لو Redis رجّع خطأ
+    if (r.result) d = JSON.parse(r.result);
+  }
   else if (fs.existsSync(DB)) d = JSON.parse(fs.readFileSync(DB, 'utf8'));
   if (!d) { d = JSON.parse(JSON.stringify(seed)); await save(d); }
   if (!d.courses || !d.courses.length) { d.courses = seed.courses; await save(d); }
@@ -88,6 +92,14 @@ const adminAuth = (req, res, next) => {
   res.status(403).json({ error: 'غير مسموح - سجّل دخول المدير' });
 };
 
+app.get('/api/ping', async (req, res) => {
+  let storage = 'file', ok = false;
+  if (KV_URL && KV_TOKEN) {
+    try { const r = await kv(['PING']); ok = r.result === 'PONG'; storage = ok ? 'redis' : 'redis-error'; }
+    catch { storage = 'redis-error'; }
+  }
+  res.json({ version: 3, storage, persistent: ok });
+});
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
@@ -246,4 +258,3 @@ app.get('/api/admin/students', adminAuth, async (req, res) => {
 
 if (!process.env.VERCEL) app.listen(process.env.PORT || 3000, () => console.log('http://localhost:3000  |  admin: /admin'));
 module.exports = app;
-
