@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QUREO MASTER | المساعد الذكي</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--line:#26334b;--text:#f5f7ff;--muted:#a5b2c9;--purple:#8b78ff;--cyan:#22d3ee;--green:#20c997}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#24204a 0,transparent 35%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px max(18px,calc((100% - 1120px)/2));border-bottom:1px solid var(--line);background:#0b1020dd;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.brand{font-weight:900;font-size:1.15rem}.brand b{color:var(--cyan)}a,button{cursor:pointer}a{color:var(--cyan);text-decoration:none}
+.wrap{max-width:1120px;margin:auto;padding:26px 18px}.hero{padding:26px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(120deg,#28214c,#121a2d 65%);margin-bottom:20px}
+.pill{display:inline-block;background:#40377a;color:#ddd7ff;border-radius:30px;padding:6px 12px;font-size:.82rem}.hero h1{font-size:clamp(1.7rem,4vw,2.6rem);margin:14px 0 8px}.hero p{color:var(--muted);line-height:1.8;margin:0}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+label{display:block;color:var(--muted);font-size:.88rem;margin:0 0 7px}select,textarea,input{width:100%;background:#0b1222;border:1px solid var(--line);border-radius:11px;color:var(--text);padding:12px;font:inherit;outline:none}textarea{min-height:145px;resize:vertical;line-height:1.7}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}.field{margin-bottom:14px}
+button{border:0;border-radius:10px;padding:11px 16px;background:var(--purple);color:white;font:inherit;font-weight:bold}button.secondary{background:#26334b}button.good{background:#087f68}button:disabled{opacity:.55;cursor:wait}
+.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.hint{font-size:.8rem;color:var(--muted);line-height:1.7;margin-top:8px}
+.preview{max-width:220px;max-height:160px;display:none;border-radius:10px;margin-top:10px;border:1px solid var(--line)}
+.answer{white-space:pre-wrap;line-height:1.9;color:#e7ecf8;overflow-wrap:anywhere}.answer h3{color:var(--cyan)}
+.history-item{padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}.history-item:last-child{border:0}.history-item small{color:var(--muted);display:block;margin-top:5px}
+.side-link{display:block;padding:10px 12px;border-radius:9px;background:#0b1222;margin:8px 0;color:var(--text)}
+.status{color:var(--muted);font-size:.88rem;min-height:22px}.err{color:#ff9292}.ok{color:#67e8b2}
+footer{text-align:center;color:var(--muted);padding:22px;font-size:.8rem}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.row{grid-template-columns:1fr}header{padding:14px 18px}}
+</style>
+</head>
+<body>
+<header><div class="brand">🧠 <b>QUREO</b> MASTER</div><div><a href="/">العودة للمنصة الرئيسية</a></div></header>
+<div class="wrap">
+<section class="hero"><span class="pill">مساعدك الدراسي الذكي</span><h1>افهم السؤال… مش بس تعرف الإجابة ✨</h1><p>اكتب السؤال أو ارفع صورة واضحة، واختر المادة والصف. هيساعدك المساعد تفهم الفكرة ويشرح خطوات الحل بالعربي.</p></section>
+<div class="layout">
+<main>
+<section class="panel">
+<div class="row">
+<div><label for="grade">الصف الدراسي</label><select id="grade"><option>الأول الثانوي</option><option>الثاني الثانوي</option><option>الثالث الثانوي</option><option>الثاني بكالوريا</option></select></div>
+<div><label for="subject">المادة</label><select id="subject"><option>برمجة</option><option>اللغة العربية</option><option>اللغة الإنجليزية</option><option>التاريخ</option><option>الرياضيات</option><option>العلوم</option><option>أخرى</option></select></div>
+</div>
+<div class="field"><label for="question">اكتب السؤال أو المطلوب</label><textarea id="question" placeholder="مثال: اشرح لي شرط if في JavaScript مع مثال بسيط…"></textarea></div>
+<div class="field"><label for="image">أو ارفع صورة السؤال (PNG / JPG / WEBP)</label><input id="image" type="file" accept="image/png,image/jpeg,image/webp"><img id="preview" class="preview" alt="معاينة صورة السؤال"></div>
+<div class="actions"><button id="ask">حلّل واشرح السؤال ✨</button><button class="secondary" id="clear">مسح</button><span class="status" id="status"></span></div>
+<div class="hint">تنبيه: المساعد أداة تعليمية للشرح والتدريب، وليس جزءًا رسميًا من منصة QUREO. لا تدخل كلمة مرور المنصة أو أي بيانات سرية.</div>
+</section>
+<section class="panel" id="result" hidden><h2>📝 الشرح</h2><div class="answer" id="answer"></div></section>
+</main>
+<aside>
+<section class="panel"><h3>📚 أدوات المذاكرة</h3><a class="side-link" href="/">🎓 كورساتك التعليمية</a><a class="side-link" href="#history">🕘 سجل أسئلتي</a><p class="hint">كل سؤال ترسله يُحفظ في حسابك لتقدر ترجع له لاحقًا.</p></section>
+<section class="panel" id="history"><div class="actions" style="justify-content:space-between"><h3>🕘 آخر الأسئلة</h3><button class="secondary" id="deleteHistory">مسح السجل</button></div><div id="historyList" class="hint">جاري تحميل السجل…</div></section>
+</aside>
+</div>
+</div>
+<footer>QUREO MASTER — مساعد تعليمي مستقل. دقّق في الإجابات وارجع لمعلمك عند الحاجة.</footer>
+<script>
+const $=id=>document.getElementById(id);
+const token=localStorage.getItem('token');
+let selectedImage='';
+async function api(url,opt={}){const r=await fetch(url,{...opt,headers:{...(opt.headers||{}),...(token?{Authorization:'Bearer '+token}:{})}});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'حدث خطأ');return d}
+function requireLogin(){if(!token){$('status').textContent='سجّل دخولك من المنصة الرئيسية أولًا.';$('status').className='status err';return false}return true}
+$('image').addEventListener('change',async e=>{const f=e.target.files[0];selectedImage='';$('preview').style.display='none';if(!f)return;if(f.size>5*1024*1024){$('status').textContent='حجم الصورة أكبر من 5 ميجابايت.';e.target.value='';return}if(!['image/png','image/jpeg','image/webp'].includes(f.type)){e.target.value='';return}selectedImage=await new Promise((resolve,reject)=>{const rd=new FileReader();rd.onload=()=>resolve(rd.result);rd.onerror=reject;rd.readAsDataURL(f)});$('preview').src=selectedImage;$('preview').style.display='block'});
+$('ask').onclick=async()=>{if(!requireLogin())return;const question=$('question').value.trim();if(!question&&!selectedImage){$('status').textContent='اكتب السؤال أو ارفع صورة.';return}$('ask').disabled=true;$('status').textContent='جاري تحليل السؤال وكتابة الشرح…';$('status').className='status';try{const d=await api('/api/qureo/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,image:selectedImage,subject:$('subject').value,grade:$('grade').value})});$('answer').textContent=d.answer;$('result').hidden=false;$('status').textContent='تم إعداد الشرح وحفظه في سجلك.';$('status').className='status ok';loadHistory()}catch(e){$('status').textContent=e.message;$('status').className='status err'}finally{$('ask').disabled=false}};
+$('clear').onclick=()=>{$('question').value='';$('image').value='';selectedImage='';$('preview').style.display='none';$('status').textContent='';$('result').hidden=true};
+async function loadHistory(){if(!requireLogin()){$('historyList').textContent='سجّل الدخول لعرض سجل الأسئلة.';return}try{const l=await api('/api/qureo/history');$('historyList').innerHTML=l.length?l.map(x=>'<div class="history-item" data-id="'+x.id+'"><b>'+esc(x.question)+'</b><small>'+esc(x.subject)+' • '+new Date(x.createdAt).toLocaleString('ar-EG')+'</small></div>').join(''):'لا توجد أسئلة محفوظة بعد.';document.querySelectorAll('.history-item').forEach(el=>el.onclick=()=>{const x=l.find(a=>a.id==el.dataset.id);$('answer').textContent=x.answer;$('result').hidden=false;$('question').value=x.question})}catch(e){$('historyList').textContent=e.message}}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('deleteHistory').onclick=async()=>{if(!requireLogin()||!confirm('تمسح كل سجل أسئلتك؟'))return;try{await api('/api/qureo/history',{method:'DELETE'});loadHistory()}catch(e){alert(e.message)}};
+loadHistory();
+</script>
+</body></html>
