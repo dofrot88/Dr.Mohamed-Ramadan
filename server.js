@@ -16,7 +16,7 @@ const ADMIN_USER = process.env.ADMIN_USER || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'; // غيّرهم من Environment Variables
 const SECRET = process.env.SECRET || crypto.createHash('sha256').update('s:' + ADMIN_PASSWORD).digest('hex');
 
-app.use(express.json());
+app.use(express.json({ limit: '8mb' }));
 // حماية: ممنوع تحميل db.json أو أي ملف كود من الرابط
 app.use((req, res, next) => /\.(json|js|md)$/i.test(req.path) ? res.status(404).end() : next());
 // الصور: مسارات صريحة عشان Vercel يضمّها مع المشروع
@@ -63,6 +63,7 @@ const load = async () => {
   if (!d.courses || !d.courses.length) { d.courses = seed.courses; await save(d); }
   d.courses.forEach(c => { if (!c.videos) c.videos = []; });
   d.watch = d.watch || []; d.grades = d.grades || [];
+  d.qureoHistory = d.qureoHistory || []; d.qureoProgress = d.qureoProgress || [];
   return d;
 };
 
@@ -254,6 +255,102 @@ app.get('/api/admin/students', adminAuth, async (req, res) => {
     courses: db.enrollments.filter(e => e.studentId === s.id)
       .map(e => (db.courses.find(c => c.id === e.courseId) || {}).title).filter(Boolean)
   })));
+});
+
+
+// ---------- QUREO MASTER: مساعد المذاكرة ----------
+app.get('/qureo', (req, res) => res.sendFile(path.join(__dirname, 'qureo.html')));
+
+app.post('/api/qureo/ask', auth, async (req, res) => {
+  const question = String(req.body.question || '').trim();
+  const image = typeof req.body.image === 'string' ? req.body.image : '';
+  const subject = String(req.body.subject || 'عام').slice(0, 60);
+  const grade = String(req.body.grade || 'الثانوي').slice(0, 60);
+  if (!question && !image) return res.status(400).json({ error: 'اكتب السؤال أو ارفع صورة.' });
+  if (question.length > 10000) return res.status(400).json({ error: 'السؤال طويل جدًا. اختصره وحاول مرة أخرى.' });
+  if (image && (!/^data:image\/(png|jpeg|webp);base64,/i.test(image) || image.length > 7000000))
+    return res.status(400).json({ error: 'الصورة غير مدعومة أو أكبر من 5 ميجابايت. استخدم PNG أو JPG أو WebP.' });
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return res.status(503).json({ error: 'المساعد الذكي غير مفعّل بعد. يحتاج المسؤول إلى إضافة OPENAI_API_KEY في إعدادات Vercel.' });
+
+  const system = 'أنت QUREO MASTER، مدرس مساعد لطلاب المرحلة الثانوية في مصر. مهمتك تعليمية: اشرح الفكرة بالعربية المصرية الواضحة وبخطوات مرتبة، وعرّف المصطلحات، وقدم مثالًا عند الحاجة. في أسئلة البرمجة اشرح الكود سطرًا بسطر، واذكر الناتج المتوقع والأخطاء الشائعة. لا تدّعِ أنك دخلت منصة QUREO أو تحققت من حساب الطالب، ولا تطلب كلمات المرور أو رموز الدخول، ولا تنفذ أو تسلّم واجبات أو اختبارات نيابة عن الطالب. إذا كان السؤال غير واضح فاطلب توضيحًا محددًا. شجّع الطالب على المحاولة والفهم.';
+  const userContent = [];
+  if (question) userContent.push({ type: 'text', text: 'الصف: ' + grade + '\nالمادة: ' + subject + '\nسؤال الطالب: ' + question });
+  else userContent.push({ type: 'text', text: 'الصف: ' + grade + '\nالمادة: ' + subject + '\nاشرح السؤال الظاهر في الصورة للطالب خطوة بخطوة.' });
+  if (image) userContent.push({ type: 'image_url', image_url: { url: image } });
+
+  let answer = '';
+  try {
+    const ai = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
+        messages: [{ role: 'system', content: system }, { role: 'user', content: userContent }],
+        temperature: 0.3,
+        max_tokens: 1800
+      })
+    });
+    const payload = await ai.json().catch(() => ({}));
+    if (!ai.ok) {
+      console.error('QUREO AI error:', ai.status, payload.error && payload.error.type);
+      return res.status(502).json({ error: 'تعذر الحصول على الشرح الآن. راجع إعدادات خدمة الذكاء الاصطناعي وحاول لاحقًا.' });
+    }
+    answer = String(payload.choices?.[0]?.message?.content || '').trim();
+    if (!answer) throw new Error('Empty AI response');
+  } catch (e) {
+    console.error('QUREO AI request failed:', e.message);
+    return res.status(502).json({ error: 'حصلت مشكلة أثناء تحليل السؤال. حاول مرة أخرى.' });
+  }
+
+  const db = await load();
+  const item = {
+    id: Date.now(),
+    studentId: req.studentId,
+    subject, grade,
+    question: question || 'سؤال مرفق بصورة',
+    answer,
+    createdAt: new Date().toISOString()
+  };
+  db.qureoHistory.push(item);
+  const mine = db.qureoHistory.filter(x => x.studentId === req.studentId);
+  if (mine.length > 100) {
+    const keep = new Set(mine.slice(-100).map(x => x.id));
+    db.qureoHistory = db.qureoHistory.filter(x => x.studentId !== req.studentId || keep.has(x.id));
+  }
+  await save(db);
+  res.json({ id: item.id, answer, createdAt: item.createdAt });
+});
+
+app.get('/api/qureo/history', auth, async (req, res) => {
+  const db = await load();
+  res.json(db.qureoHistory.filter(x => x.studentId === req.studentId)
+    .sort((a, b) => b.id - a.id).slice(0, 50)
+    .map(({ id, subject, grade, question, answer, createdAt }) => ({ id, subject, grade, question, answer, createdAt })));
+});
+
+app.delete('/api/qureo/history', auth, async (req, res) => {
+  const db = await load();
+  db.qureoHistory = db.qureoHistory.filter(x => x.studentId !== req.studentId);
+  await save(db);
+  res.json({ ok: true });
+});
+
+app.get('/api/qureo/progress', auth, async (req, res) => {
+  const db = await load();
+  res.json(db.qureoProgress.filter(x => x.studentId === req.studentId));
+});
+
+app.post('/api/qureo/progress', auth, async (req, res) => {
+  const lessonId = String(req.body.lessonId || '').trim().slice(0, 120);
+  const completed = !!req.body.completed;
+  if (!lessonId) return res.status(400).json({ error: 'معرّف الدرس غير صحيح.' });
+  const db = await load();
+  const old = db.qureoProgress.find(x => x.studentId === req.studentId && x.lessonId === lessonId);
+  if (old) { old.completed = completed; old.updatedAt = new Date().toISOString(); }
+  else db.qureoProgress.push({ studentId: req.studentId, lessonId, completed, updatedAt: new Date().toISOString() });
+  await save(db);
+  res.json({ ok: true });
 });
 
 if (!process.env.VERCEL) app.listen(process.env.PORT || 3000, () => console.log('http://localhost:3000  |  admin: /admin'));
